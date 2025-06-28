@@ -1,559 +1,81 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lazy PHP 文档</title>
-    <style>
-        :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #4caf50;
-            --light-green: #e8f5e9;
-            --dark-green: #1b5e20;
-            --text-color: #333;
-            --light-gray: #f5f5f5;
-            --bg-color: white;
-            --sidebar-bg: #2e7d32;
-            --sidebar-text: white;
-            --nav-bg: white;
-            --nav-text: #333;
-        }
-
-        /* Dark mode variables */
-        .dark-mode {
-            --primary-color: #4caf50;
-            --secondary-color: #81c784;
-            --light-green: #1e3e1e;
-            --dark-green: #a5d6a7;
-            --text-color: #e0e0e0;
-            --light-gray: #424242;
-            --bg-color: #121212;
-            --sidebar-bg: #1a1a1a;
-            --sidebar-text: #e0e0e0;
-            --nav-bg: #1a1a1a;
-            --nav-text: #e0e0e0;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--bg-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        /* Top navigation bar */
-        .top-nav {
-            display: none;
-            background-color: var(--nav-bg);
-            color: var(--nav-text);
-            padding: 15px 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            align-items: center;
-        }
-        
-        .nav-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .top-nav h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            border: none;
-            padding: 0;
-        }
-        
-        .nav-controls {
-            display: flex;
-            gap: 15px;
-            margin-left: auto;
-        }
-        
-        .nav-btn {
-            background: none;
-            border: none;
-            color: var(--nav-text);
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-        
-        .nav-btn:hover {
-            background-color: rgba(0,0,0,0.1);
-            color: var(--primary-color);
-        }
-        
-        /* MDUI-like icons */
-        .icon {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            position: relative;
-        }
-        
-        .menu-icon {
-            width: 18px;
-            height: 14px;
-        }
-        
-        .menu-icon::before,
-        .menu-icon::after,
-        .menu-icon span {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background-color: currentColor;
-            left: 0;
-            transition: all 0.3s;
-        }
-        
-        .menu-icon::before {
-            top: 0;
-        }
-        
-        .menu-icon::after {
-            bottom: 0;
-        }
-        
-        .menu-icon span {
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        
-        .dark-icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid currentColor;
-            position: relative;
-        }
-        
-        .dark-icon::before {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            border-right-color: currentColor;
-            top: -1px;
-            right: -1px;
-            transform: rotate(45deg);
-        }
-        
-        .light-icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background-color: currentColor;
-            position: relative;
-        }
-        
-        .light-icon::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid currentColor;
-            top: -2px;
-            left: -2px;
-            transform: scale(0.5);
-        }
-        
-        .light-icon::after {
-            content: '';
-            position: absolute;
-            width: 2px;
-            height: 8px;
-            background-color: currentColor;
-            top: -8px;
-            left: 50%;
-            margin-left: -1px;
-            box-shadow: 
-                0 20px 0 currentColor,
-                8px 4px 0 currentColor,
-                -8px 4px 0 currentColor,
-                6px -6px 0 currentColor,
-                -6px -6px 0 currentColor;
-        }
-        
-        .arrow-up-icon {
-            width: 18px;
-            height: 18px;
-        }
-        
-        .arrow-up-icon::before {
-            content: '';
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-top: 2px solid currentColor;
-            border-right: 2px solid currentColor;
-            top: 6px;
-            left: 4px;
-            transform: rotate(-45deg);
-        }
-        
-        /* 侧边栏样式 */
-        .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-bg);
-            color: var(--sidebar-text);
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            z-index: 999;
-        }
-        
-        .sidebar-header {
-            padding: 0 20px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .sidebar-nav {
-            padding: 20px;
-        }
-        
-        .sidebar-nav a {
-            color: var(--sidebar-text);
-            text-decoration: none;
-            display: block;
-            padding: 8px 0;
-            transition: all 0.3s;
-        }
-        
-        .sidebar-nav a:hover {
-            color: var(--light-green);
-            padding-left: 10px;
-        }
-        
-        /* 主内容区样式 */
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 80px 40px 40px;
-            background-color: var(--bg-color);
-            min-height: 100vh;
-            transition: margin-left 0.3s;
-        }
-        
-        /* 标题样式 */
-        h1 {
-            color: var(--dark-green);
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 10px;
-        }
-        
-        h2 {
-            color: var(--primary-color);
-            margin-top: 40px;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed var(--secondary-color);
-        }
-        
-        h3 {
-            color: var(--dark-green);
-        }
-        
-        /* 引用样式 */
-        blockquote {
-            background-color: var(--light-green);
-            border-left: 4px solid var(--secondary-color);
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        /* 列表样式 */
-        ul {
-            padding-left: 20px;
-        }
-        
-        li {
-            margin-bottom: 8px;
-        }
-        
-        /* 链接样式 */
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-            color: var(--dark-green);
-        }
-        
-        /* 代码块样式 */
-        pre {
-            background-color: var(--light-gray);
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-            border-left: 3px solid var(--primary-color);
-        }
-        
-        code {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: var(--light-gray);
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-        
-        /* 分隔线 */
-        hr {
-            border: 0;
-            height: 1px;
-            background-color: var(--light-gray);
-            margin: 30px 0;
-        }
-        
-        /* 侧边栏切换按钮 */
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1100;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            width: 40px;
-            height: 40px;
-            font-size: 0;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        /* 快速跳转按钮 */
-        .quick-nav {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 0;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .top-nav {
-                display: flex;
-            }
-            
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding-top: 80px;
-            }
-            
-            .sidebar-toggle {
-                display: block;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- 顶部导航栏 -->
-    <nav class="top-nav">
-        <div class="nav-title">
-            <button class="sidebar-toggle" id="sidebarToggle">
-                <span class="icon menu-icon"><span></span></span>
-            </button>
-        </div>
-        <div class="nav-controls">
-            <button class="nav-btn" id="themeToggle">
-                <span class="icon dark-icon"></span>
-                <span></span>
-            </button>
-        </div>
-    </nav>
-    
-    <!-- 侧边栏导航 -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2>Lazy PHP 文档</h2>
-            <p>by.长歌(3355236800)</p>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="#preface">前言</a>
-            <a href="#linux-windows-tutorial">Linux/Windows教程</a>
-            <a href="#android-tutorial">安卓教程</a>
-        </nav>
-    </div>
-    
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <h1>Lazy PHP 文档</h1>
-        <blockquote>by.长歌(3355236800)</blockquote>
-        
-        <section id="preface">
-            <h2>前言</h2>
-            <blockquote>
-                <p>这个文档是我闲暇时写的,当初只是自用,后续因为他人询问于是开发成框架,本框架一直更新并持续优化和简化代码,框架整体大小不超过3MB</p>
-                <p>本人目前只是高中生,希望大家能够给予支持</p>
-            </blockquote>
-        </section>
-        
-        <section id="linux-windows-tutorial">
-            <h2>Linux/Windows教程</h2>
-            
-            <h3>事先准备</h3>
-            <ul>
-                <li>✓ 一台服务器</li>
-                <li>✓ 域名且配置ssl</li>
-            </ul>
-            
-            <h3>下载框架</h3>
-            <p><a href="https://qm.qq.com/q/TqvvHJy5OM">点击下载</a></p>
-            
-            <h3>安装运维面板(例如:宝塔)</h3>
-            <p><a href="http://bt.cn">跳转宝塔地址</a></p>
-            <p>然后创建PHP网站</p>
-            <p>导入源码</p>
-            
-            <hr>
-            
-            <p>在main.php内更改你的机器人信息</p>
-            
-            <h3>绑定回调地址</h3>
-            <blockquote>
-                <p>开放平台填写</p>
-                <p>https://域名/index.php</p>
-                <p><a href="https://q.qq.com">点击跳转QQ开放平台</a></p>
-                <p>记得添加IP白名单哦</p>
-            </blockquote>
-            
-            <h3>运行测试</h3>
-            <blockquote>
-                <p>上述完成之后</p>
-                <hr>
-                <p>在沙箱配置内设置沙箱群</p>
-                <p>然后在沙箱群内at机器人测试</p>
-                <p>Tips:记得导入插件(plugin目录内)</p>
-                <p>访问域名就可以使用后台la</p>
-            </blockquote>
-        </section>
-        
-        <section id="android-tutorial">
-            <h2>安卓教程</h2>
-            <p><a href="https://b23.tv/7VUVc6E">点击查看教程</a></p>
-            <p>建议一键三连😋😋😋</p>
-        </section>
-    </div>
-
-    <!-- 快速跳转按钮 -->
-    <button class="quick-nav" id="quickNavBtn">
-        <span class="icon arrow-up-icon"></span>
-    </button>
-
+    <meta charset="utf-8">
+    <title>流年絮语</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/css/mdui.min.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
+    <link rel="stylesheet" href="t/font_1625701_q2422cy34wn.css">
+    <link rel="icon" href="/assets/img/logo-circul-100.png">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162013750-5"></script>
     <script>
-        // 平滑滚动到锚点
-        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 20,
-                        behavior: 'smooth'
-                    });
-                    
-                    // 更新URL哈希
-                    history.pushState(null, null, targetId);
-                    
-                    // 在移动端点击后关闭侧边栏
-                    if (window.innerWidth <= 768) {
-                        document.getElementById('sidebar').classList.remove('active');
-                    }
-                }
-            });
-        });
-        
-        // 侧边栏切换
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-        
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-        
-        // 主题切换
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('.icon');
-        
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.className = 'icon light-icon';
-                themeToggle.innerHTML = '<span class="icon light-icon"></span><span></span>';
-            } else {
-                themeIcon.className = 'icon dark-icon';
-                themeToggle.innerHTML = '<span class="icon dark-icon"></span><span></span>';
-            }
-        });
-        
-        // 快速跳转顶部
-        const quickNavBtn = document.getElementById('quickNavBtn');
-        
-        quickNavBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // 显示/隐藏快速跳转按钮
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                quickNavBtn.style.display = 'flex';
-            } else {
-                quickNavBtn.style.display = 'none';
-            }
-        });
+        console.log("\n %c Made with love %c by 长歌 | Change ","color:#444;background:#eee;padding:5px 0;","color:#F8F8FF;background:#F4A7B9;padding:5px 0;");
     </script>
+
+</head>
+
+<body class="mdui-theme-primary-pink mdui-theme-accent-pink">
+    <div id="rin-bg"></div>
+    <main id="rin-main">
+        <div class="mdui-row">
+            <div class="mdui-col-xs-12 mdui-col-md-2">
+                <div class="rin-left">
+                    <div class="rin-logo">
+                        <img src="/assets/img/logo.jpg">
+                    </div>
+                    <div class="rin-left-title">长&nbsp;歌</div>
+                    <div class="rin-left-slogan">「浮生若梦，为欢几何」</div>
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-10">
+                <div class="mdui-card rin-card">
+                    <div class="rin-card-part" id="introduce" style="margin-top: 0;">
+                        <div class="rin-card-content mdui-typo">你好！相见就是有缘，认识一下叭<br>
+                        Planting flowers in the digital world.<br>
+                        </div>
+                    </div>
+                    <div class="rin-card-part" id="contact">
+                        <div class="rin-card-title2 mdui-typo"><a href="#contact">#</a> 联系途径 </div>
+                        
+<a class="mdui-btn mdui-btn-raised rin-btn rin-btn-black mdui-text-capitalize" href="https://qm.qq.com/q/6KJKwW2bXG" target="_blank"><span class="iconfont iconqq"></span> QQ</a>
+
+<a class="mdui-btn mdui-btn-raised rin-btn rin-btn-black mdui-text-capitalize" href="mailto:3355236800@qq.com" target="_blank"><span class="iconfont iconmail_fill"></span> Mail</a>
+                        
+
+                    </div>
+
+                    <div class="rin-card-part" id="article">
+                        <div class="rin-card-title2 mdui-typo"><a href="#article">#</a> 群聊</div>
+                       
+                       
+                       <a target="_blank" href="https://qm.qq.com/q/HsXUlw6veO">
+                            <div class="mdui-card rin-card rin-card-article" style="margin-bottom: 10px;">
+                                <div class="rin-article-title">闲聊の日常</div>
+                                <div class="rin-article-content">聊聊天谈谈心,说说你的故事</div>
+                            </div>
+                        </a>
+
+                        <a target="_blank" href="https://qm.qq.com/q/QtW1AID6EO">
+                            <div class="mdui-card rin-card rin-card-article" style="margin-bottom: 10px;">
+                                <div class="rin-article-title">长歌の日常</div>
+                                <div class="rin-article-content">分享一些代码知识</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="rin-tr"></div>
+
+                    <div class="rin-card-part" id="last">
+                        <div class="rin-card-content">&nbsp;执念落空时,山海皆成客途</div>
+                    </div>
+
+                    <div class="rin-card-part" id="footer">
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/gh/AyagawaSeirin/homepage@latest/mdui/js/mdui.min.js"></script>
 </body>
+
 </html>

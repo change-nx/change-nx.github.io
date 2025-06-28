@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lazy Doc</title>
+<link rel="stylesheet" href="./Doc/doc.css">
+</head>
+<body>
+<nav class="navbar">
+<button class="sidebar-button" id="sidebarToggle">≡</button>
+<div class="navbar-title">Lazy Doc</div>
+</nav>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-menu" id="sidebarMenu"></div>
+</aside>
+<main class="content">
+<article class="markdown-content">
+<h1 id="lazy-doc">Lazy Doc</h1>
+<blockquote>by 长歌(3355236800)</blockquote>
+<h2 id="变量">变量</h2>
+<h3 id="群聊">群聊</h3>
+<pre><code>//PHP代码↓↓↓
+$raw      //原始数据
+$user     //用户ID
+$group    //群号
+$id       //消息id
+$msg      //消息内容
+</code></pre>
+<h3 id="私聊">私聊</h3>
+<pre><code>//PHP代码↓↓↓
+$raw      //原始数据
+$user     //用户ID
+$id       //消息id
+$msg      //消息内容
+</code></pre>
+<h3 id="加群">加群</h3>
+<pre><code>//PHP代码↓↓↓
+$raw     //原始数据
+$event   //事件id
+$user    //邀请人
+$group   //群号
+</code></pre>
+<h3 id="退群">退群</h3>
+<pre><code>//PHP代码↓↓↓
+$raw     //原始数据
+$event   //事件id
+$user    //邀请人
+$group   //群号
+</code></pre>
+<h2 id="函数">函数</h2>
+<h3 id="群聊函数">群聊函数</h3>
+<pre><code>//PHP代码↓↓↓
+群文字(消息id,群号,内容)
+群图片(消息id,群号,图链或二进制图片,选填文字)
+群视频(消息id,群号,视频链接)
+群语音(消息id,群号,语音链接)
+群大图(消息id,群号,大标题,小标题,图链)
+群文卡(消息id,群号,内容)
+群跳转卡(消息id,群号,标题,描述,图链,跳转链接)
+群按钮(消息id,群号,按钮id)
+</code></pre>
+<h3 id="私聊函数">私聊函数</h3>
+<pre><code>//PHP代码↓↓↓
+私文字(消息id,用户id,内容)
+私图片(消息id,用户id,图链或二进制图片,选填文字)
+私视频(消息id,用户id,视频链接)
+私语音(消息id,用户id,语音链接)
+私大图(消息id,用户id,大标题,小标题,图链)
+私文卡(消息id,用户id,内容)
+私跳转卡(消息id,用户id,标题,描述,图链,跳转链接)
+私按钮(消息id,用户id,按钮id)
+</code></pre>
+<h3 id="群聊事件函数">群聊事件函数</h3>
+<pre><code>//PHP代码↓↓↓
+事件群文字(事件id,群号,内容)
+事件群图片(事件id,群号,图链或二进制图片,选填文字)
+事件群视频(事件id,群号,视频链接)
+事件群语音(事件id,群号,语音链接)
+事件群大图(事件id,群号,大标题,小标题,图链)
+事件群文卡(事件id,群号,内容)
+事件群跳转卡(事件id,群号,标题,描述,图链,跳转链接)
+事件群按钮(事件id,群号,按钮id)
+</code></pre>
+<h3 id="私聊事件函数">私聊事件函数</h3>
+<pre><code>//PHP代码↓↓↓
+事件私文字(事件id,用户id,内容)
+事件私图片(事件id,用户id,图链或二进制图片,选填文字)
+事件私视频(事件id,用户id,视频链接)
+事件私语音(事件id,用户id,语音链接)
+事件私大图(事件id,用户id,大标题,小标题,图链)
+事件私文卡(事件id,用户id,内容)
+事件私跳转卡(事件id,用户id,标题,描述,图链,跳转链接)
+事件私按钮(事件id,用户id,按钮id)
+</code></pre>
+</article>
+</main>
+<script src="./Doc/script.js"></script>
+</body>
+</html>

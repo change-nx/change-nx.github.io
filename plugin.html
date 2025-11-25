@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cucko Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #eef2ff;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --card-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary-color), #3a0ca3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 50px 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: white;
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plugins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .plugin-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .plugin-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary-light);
+        }
+
+        .plugin-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .plugin-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .plugin-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: var(--primary-color);
+        }
+
+        .plugin-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plugin-description {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .plugin-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .plugin-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .view-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .view-btn:hover {
+            background: #3a56d4;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .details-btn {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .details-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px 20px;
+            color: #e53e3e;
+            background: #fed7d7;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        /* 插件详情弹窗 */
+        .plugin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .plugin-modal.active {
+            display: flex;
+        }
+
+        .plugin-modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plugin-modal-header {
+            padding: 25px 25px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .plugin-modal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .plugin-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .plugin-modal-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .plugin-modal-body {
+            padding: 25px;
+        }
+
+        .plugin-modal-section {
+            margin-bottom: 25px;
+        }
+
+        .plugin-modal-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .plugin-modal-description {
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .plugin-modal-footer {
+            padding: 20px 25px;
+            background: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .close-modal-btn {
+            background: var(--text-light);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .close-modal-btn:hover {
+            background: #718096;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stat-item {
+                min-width: auto;
+            }
+            
+            .plugins-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .plugin-modal-content {
+                max-height: 90vh;
+            }
+            
+            .plugin-modal-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cucko Market</h1>
+            <p>发现并安装功能强大的插件来扩展您的应用</p>
+        </div>
+        
+        <div class="search-section">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索插件名称、描述...">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalPlugins">0</div>
+                <div class="stat-label">总插件数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="filteredPlugins">0</div>
+                <div class="stat-label">当前显示</div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>正在加载插件市场...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+            <p>加载插件市场失败</p>
+            <button class="view-btn" onclick="loadPlugins()">重新加载</button>
+        </div>
+
+        <div id="pluginsContainer" class="plugins-grid" style="display: none;"></div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">🔌</div>
+            <h3>没有找到匹配的插件</h3>
+            <p>尝试调整搜索关键词</p>
+        </div>
+    </div>
+
+    <!-- 插件详情弹窗 -->
+    <div id="pluginModal" class="plugin-modal">
+        <div class="plugin-modal-content">
+            <div class="plugin-modal-header">
+                <div class="plugin-modal-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="plugin-modal-title" id="modalPluginName">插件名称</h2>
+                    <div class="plugin-modal-subtitle">插件详细信息</div>
+                </div>
+            </div>
+            <div class="plugin-modal-body">
+                <div class="plugin-modal-section">
+                    <h3 class="plugin-modal-section-title">插件介绍</h3>
+                    <div class="plugin-modal-description" id="modalPluginDescription">插件描述内容</div>
+                </div>
+                <div class="plugin-modal-section">
+                    <h3 class="plugin-modal-section-title">插件地址</h3>
+                    <div class="plugin-modal-description">
+                        下载地址: <code id="modalPluginUrl">插件地址</code>
+                    </div>
+                </div>
+            </div>
+            <div class="plugin-modal-footer">
+                <button class="close-modal-btn" onclick="closePluginModal()">关闭</button>
+                <a class="view-btn" id="modalViewBtn" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                    查看插件
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pluginsData = [];
+        let filteredPlugins = [];
+
+        // 页面加载时获取插件数据
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPlugins();
+            setupSearch();
+        });
+
+        // 加载插件数据
+        async function loadPlugins() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('pluginsContainer').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/change-nx/change-nx.github.io/main/plugin.json');
+                pluginsData = await response.json();
+                
+                // 随机排序插件
+                pluginsData = shuffleArray(pluginsData);
+                
+                // 更新统计数据
+                updateStats();
+                
+                // 渲染插件列表
+                renderPlugins(pluginsData);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('pluginsContainer').style.display = 'grid';
+            } catch (error) {
+                console.error('加载插件失败:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        // 数组随机排序函数
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // 设置搜索功能
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    filteredPlugins = [...pluginsData];
+                } else {
+                    filteredPlugins = pluginsData.filter(plugin => {
+                        return (
+                            plugin.昵称.toLowerCase().includes(searchTerm) ||
+                            plugin.介绍.toLowerCase().includes(searchTerm)
+                        );
+                    });
+                }
+                
+                renderPlugins(filteredPlugins);
+                updateStats();
+            });
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            document.getElementById('totalPlugins').textContent = pluginsData.length;
+            document.getElementById('filteredPlugins').textContent = filteredPlugins.length;
+        }
+
+        // 渲染插件列表
+        function renderPlugins(plugins) {
+            const container = document.getElementById('pluginsContainer');
+            
+            if (plugins.length === 0) {
+                container.style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            let html = '';
+            
+            plugins.forEach((plugin, index) => {
+                html += `
+                    <div class="plugin-card">
+                        <div class="plugin-header">
+                            <div class="plugin-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                                </svg>
+                            </div>
+                            <h3 class="plugin-name">${escapeHtml(plugin.昵称)}</h3>
+                        </div>
+                        
+                        <div class="plugin-content">
+                            <div class="plugin-description">
+                                ${escapeHtml(plugin.介绍)}
+                            </div>
+                            
+                            <div class="plugin-footer">
+                                <div class="plugin-actions">
+                                    <a href="${escapeHtml(plugin.地址)}" class="view-btn" target="_blank">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                        </svg>
+                                        查看
+                                    </a>
+                                    <button class="details-btn" onclick="showPluginDetails(${index})">
+                                        详情
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            container.style.display = 'grid';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        // 显示插件详情
+        function showPluginDetails(index) {
+            const plugin = filteredPlugins[index] || pluginsData[index];
+            if (!plugin) return;
+
+            document.getElementById('modalPluginName').textContent = plugin.昵称;
+            document.getElementById('modalPluginDescription').textContent = plugin.介绍;
+            document.getElementById('modalPluginUrl').textContent = plugin.地址;
+            
+            // 设置查看按钮
+            const viewBtn = document.getElementById('modalViewBtn');
+            viewBtn.href = plugin.地址;
+
+            document.getElementById('pluginModal').classList.add('active');
+        }
+
+        // 关闭插件详情弹窗
+        function closePluginModal() {
+            document.getElementById('pluginModal').classList.remove('active');
+        }
+
+        // HTML转义函数
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // 点击弹窗外部关闭
+        document.getElementById('pluginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePluginModal();
+            }
+        });
+
+        // 回车键搜索
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.blur();
+            }
+        });
+    </script>
+</body>
+</html>

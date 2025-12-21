@@ -1,0 +1,269 @@
+/* Markdown内容样式 */
+.markdown-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-color);
+}
+
+.markdown-body > *:first-child {
+    margin-top: 0;
+}
+
+/* 标题 */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    line-height: 1.25;
+    position: relative;
+    padding-bottom: 0.3em;
+}
+
+.markdown-body h1 {
+    font-size: 2em;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.markdown-body h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.markdown-body h3 {
+    font-size: 1.25em;
+}
+
+.markdown-body h4 {
+    font-size: 1em;
+}
+
+.markdown-body h5 {
+    font-size: 0.875em;
+}
+
+.markdown-body h6 {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+/* 段落 */
+.markdown-body p {
+    margin: 1em 0;
+}
+
+/* 链接 */
+.markdown-body a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.markdown-body a:hover {
+    border-bottom-color: var(--primary-color);
+}
+
+/* 列表 */
+.markdown-body ul,
+.markdown-body ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+.markdown-body li {
+    margin: 0.5em 0;
+}
+
+.markdown-body li > p {
+    margin: 0;
+}
+
+/* 任务列表 */
+.markdown-body .task-list-item {
+    list-style-type: none;
+}
+
+.markdown-body .task-list-item-checkbox {
+    margin: 0 0.2em 0.25em -1.6em;
+    vertical-align: middle;
+}
+
+/* 引用 */
+.markdown-body blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 6px 6px 0;
+    color: var(--text-secondary);
+}
+
+.markdown-body blockquote > :first-child {
+    margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+    margin-bottom: 0;
+}
+
+/* 代码 */
+.markdown-body code {
+    background: var(--bg-secondary);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    color: #e83e8c;
+}
+
+.markdown-body pre {
+    background: var(--bg-secondary);
+    padding: 1em;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5em 0;
+    border: 1px solid var(--border-color);
+}
+
+.markdown-body pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: 0.95em;
+}
+
+/* 表格 */
+.markdown-body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.markdown-body th,
+.markdown-body td {
+    border: 1px solid var(--border-color);
+    padding: 0.75em 1em;
+    text-align: left;
+}
+
+.markdown-body th {
+    background: var(--bg-secondary);
+    font-weight: 600;
+}
+
+.markdown-body tr:nth-child(even) {
+    background: var(--bg-secondary);
+}
+
+.markdown-body tr:hover {
+    background: rgba(var(--primary-color-rgb), 0.05);
+}
+
+/* 图片 */
+.markdown-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    margin: 1em 0;
+}
+
+/* 水平线 */
+.markdown-body hr {
+    height: 2px;
+    background: var(--border-color);
+    border: none;
+    margin: 2em 0;
+}
+
+/* 行内代码块 */
+.markdown-body .highlight {
+    position: relative;
+    margin: 1.5em 0;
+}
+
+.markdown-body .highlight pre {
+    margin: 0;
+    border-radius: 8px;
+}
+
+/* 代码块标题 */
+.markdown-body .code-title {
+    background: var(--bg-secondary);
+    color: var(--text-color);
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 8px 8px 0 0;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-bottom: -1px;
+}
+
+/* 提示框 */
+.markdown-body .tip,
+.markdown-body .note,
+.markdown-body .warning {
+    padding: 1em;
+    margin: 1.5em 0;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.markdown-body .tip {
+    background: rgba(34, 197, 94, 0.1);
+    border-left-color: #22c55e;
+}
+
+.markdown-body .note {
+    background: rgba(59, 130, 246, 0.1);
+    border-left-color: #3b82f6;
+}
+
+.markdown-body .warning {
+    background: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
+}
+
+/* 数学公式 */
+.markdown-body .math {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 脚注 */
+.markdown-body .footnotes {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-color);
+    margin-top: 2em;
+    padding-top: 1em;
+}
+
+/* 嵌入内容 */
+.markdown-body iframe {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 1em 0;
+}
+
+/* 深色主题调整 */
+[data-theme="dark"] .markdown-body code {
+    color: #ff79c6;
+}
+
+[data-theme="dark"] .markdown-body pre {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .markdown-body th {
+    background: #1a1a2e;
+}

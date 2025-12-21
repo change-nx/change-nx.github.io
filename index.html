@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 文档中心 | 知识库</title>
+    
+    <!-- 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/markdown.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" id="highlight-theme">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-book"></i>
+                    <h1>文档中心</h1>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <!-- 搜索框 -->
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索文档...">
+                </div>
+                
+                <!-- 主题切换 -->
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <span class="theme-text">夜间模式</span>
+                </button>
+                
+                <!-- GitHub链接 -->
+                <a href="https://github.com" class="github-btn" target="_blank">
+                    <i class="fab fa-github"></i>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-folder-open"></i> 文档目录</h3>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 文件树 -->
+            <div class="file-tree" id="fileTree">
+                <div class="tree-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    正在加载文档列表...
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="content" id="content">
+            <!-- 内容头部 -->
+            <div class="content-header">
+                <div class="breadcrumb" id="breadcrumb">
+                    <a href="#" data-path="docs/README.md">首页</a>
+                </div>
+                <div class="content-actions">
+                    <button class="btn btn-outline" onclick="window.print()">
+                        <i class="fas fa-print"></i> 打印
+                    </button>
+                    <button class="btn btn-outline" onclick="copyUrl()">
+                        <i class="fas fa-link"></i> 复制链接
+                    </button>
+                </div>
+            </div>
+
+            <!-- Markdown内容 -->
+            <article class="markdown-body" id="markdownContent">
+                <div class="welcome-screen">
+                    <div class="welcome-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h2>欢迎使用文档中心</h2>
+                    <p>从左侧选择文档开始阅读，或使用搜索功能查找内容。</p>
+                    
+                    <div class="welcome-features">
+                        <div class="feature">
+                            <i class="fas fa-search"></i>
+                            <h4>智能搜索</h4>
+                            <p>快速找到所需文档</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-moon"></i>
+                            <h4>夜间模式</h4>
+                            <p>保护眼睛，舒适阅读</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h4>响应式设计</h4>
+                            <p>适配所有设备</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-code"></i>
+                            <h4>代码高亮</h4>
+                            <p>支持多种编程语言</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 页脚 -->
+            <footer class="content-footer">
+                <div class="footer-info">
+                    <p>© 2024 文档中心 | 最后更新: <span id="lastUpdate"></span></p>
+                    <div class="footer-links">
+                        <a href="#" onclick="loadPage('docs/README.md')">首页</a>
+                        <a href="#" onclick="loadPage('docs/guide/index.md')">帮助</a>
+                        <a href="#" onclick="showAbout()">关于</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <p>加载中...</p>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="./js/marked.min.js"></script>
+    <script src="./js/highlight.min.js"></script>
+    <script src="./js/fileScanner.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

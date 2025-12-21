@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的文档站点</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏导航 -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>📚 我的文档</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="loadPage('docs/README.md')">🏠 首页</a></li>
+                <li><a href="#" onclick="loadPage('docs/guide/index.md')">📖 指南</a></li>
+                <li><a href="#" onclick="loadPage('docs/api/index.md')">🔧 API</a></li>
+                <li><a href="#" onclick="loadPage('docs/guide/install.md')">⚡ 安装</a></li>
+            </ul>
+        </nav>
+
+        <!-- 主内容区 -->
+        <main class="content">
+            <div class="content-header">
+                <h1>欢迎访问我的文档</h1>
+                <p>一个简单的静态文档站点</p>
+            </div>
+            <div id="content" class="markdown-body">
+                <!-- 内容将通过JavaScript动态加载 -->
+                <p>请从左侧导航选择要查看的文档。</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

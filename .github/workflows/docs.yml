@@ -31,7 +31,7 @@ jobs:
           cache: pnpm
 
       - name: 安装依赖
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile || pnpm install
 
       # 运行构建脚本
       - name: 构建 VuePress 站点

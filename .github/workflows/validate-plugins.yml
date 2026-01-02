@@ -1,0 +1,61 @@
+name: Check Plugin Repositories Daily
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # 每天凌晨 UTC 时间 00:00 执行
+  workflow_dispatch:      # 支持手动触发
+
+jobs:
+  check-repos:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write        # 允许关闭/删除 issue
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Check Plugin Links
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: "change-nx/change-nx.github.io"
+        run: |
+          # 获取所有打开的 issues
+          issues=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$REPO/issues?state=open&per_page=100")
+
+          echo "$issues" | jq -r '.[] | "$.number),$.body)"' | while IFS=',' read -r number body; do
+            # URL 解码 body
+            body=$(echo "$body" | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote_plus(sys.stdin.read()))")
+
+            # 提取 link 字段
+            link=$(echo "$body" | jq -r '.link // empty')
+            if [[ -z "$link" ]]; then
+              echo "跳过 issue #$number：未找到 link 字段"
+              continue
+            fi
+
+            # 提取仓库路径
+            repo_path=$(echo "$link" | sed -E 's|https?://github\.com/([^/]+)/([^/]+).*|\1/\2|')
+            if [[ "$repo_path" == "$link" ]]; then
+              echo "跳过 issue #$number：无法解析仓库地址"
+              continue
+            fi
+
+            # 检查仓库是否存在
+            status_code=$(curl -o /dev/null -s -w "%{http_code}" \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              --head "https://api.github.com/repos/$repo_path")
+
+            if [[ $status_code -eq 404 ]]; then
+              echo "⚠️ 仓库 $link 不存在 (404)，正在关闭 issue #$number..."
+              curl -X DELETE \
+                -H "Authorization: Bearer $GITHUB_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/$REPO/issues/$number"
+            else
+              echo "✅ 仓库 $repo_path 正常 ($status_code)"
+            fi
+
+            sleep 1  # 避免速率限制
+          done

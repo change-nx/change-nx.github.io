@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Couest 插件市场</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ദ്ദ📦</text></svg>">
+    <style>
+        :root {
+            --primary-color: #f0f8ff; /* 极淡的蓝色 */
+            --secondary-color: #e6f2ff;
+            --accent-color: #b3d9ff; /* 淡蓝色 */
+            --text-color: #333;
+            --light-text: #666;
+            --lighter-text: #888;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --card-bg: #ffffff;
+            --background: #fafcff;
+            --tag-bg: #e6f2ff;
+            --tag-text: #2c6fb3;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f3460;
+            --text-color: #e6e6e6;
+            --light-text: #b0b0b0;
+            --lighter-text: #888;
+            --border-color: #2a2a3a;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.25);
+            --card-bg: #1e1e2e;
+            --background: #161625;
+            --tag-bg: #2c3e50;
+            --tag-text: #6cb2eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        header {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-icons a {
+            color: var(--text-color);
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: color 0.2s, transform 0.2s;
+        }
+        
+        .nav-icons a:hover {
+            color: var(--tag-text);
+            transform: translateY(-2px);
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        
+        /* 搜索和筛选区域 */
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: var(--shadow);
+            flex: 1;
+            max-width: 500px;
+        }
+        
+        .search-box i {
+            color: var(--lighter-text);
+            margin-right: 10px;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+        
+        .search-box input::placeholder {
+            color: var(--lighter-text);
+        }
+        
+        .plugins-count {
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .refresh-btn, .sort-dropdown {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-color);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+        
+        .refresh-btn:hover, .sort-dropdown:hover {
+            transform: translateY(-2px);
+        }
+        
+        .sort-container {
+            position: relative;
+        }
+        
+        .sort-dropdown {
+            min-width: 150px;
+        }
+        
+        .sort-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow-hover);
+            padding: 10px 0;
+            margin-top: 5px;
+            min-width: 180px;
+            display: none;
+            z-index: 10;
+        }
+        
+        .sort-options.active {
+            display: block;
+        }
+        
+        .sort-option {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .sort-option:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        /* 插件列表 */
+        .plugins-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .plugin-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .plugin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .plugin-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .plugin-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: var(--tag-text);
+        }
+        
+        .plugin-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .plugin-author {
+            color: var(--tag-text);
+            font-weight: 600;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .plugin-desc {
+            color: var(--light-text);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .plugin-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .stat-item i {
+            color: var(--tag-text);
+        }
+        
+        .plugin-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .plugin-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag {
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .repo-btn {
+            background-color: var(--tag-text);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        
+        .repo-btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .page-btn {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-color);
+            box-shadow: var(--shadow);
+            transition: background-color 0.2s;
+        }
+        
+        .page-btn.active {
+            background-color: var(--tag-text);
+            color: white;
+        }
+        
+        .page-btn:hover:not(.disabled) {
+            background-color: var(--secondary-color);
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-dots {
+            color: var(--light-text);
+        }
+        
+        /* 浮动添加按钮 */
+        .float-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--tag-text);
+            color: white;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(44, 111, 179, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 100;
+        }
+        
+        .float-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(44, 111, 179, 0.4);
+        }
+        
+        /* 弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light-text);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--background);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--tag-text);
+        }
+        
+        .tags-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tag-input-item {
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .remove-tag {
+            background: none;
+            border: none;
+            color: var(--tag-text);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-tag-btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-tag-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .submit-btn {
+            background-color: var(--tag-text);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .search-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .plugin-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .plugin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .plugin-icon {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span>Cucko</span>
+                </div>
+                <div class="nav-icons">
+                    <a href="#" id="theme-toggle" title="切换暗色模式">
+                        <i class="fas fa-moon"></i>
+                    </a>
+                    <a href="http://link3.cc/couest" title="首页">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="http://github.com/change-nx/Couest" title="GitHub" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://qm.qq.com/q/ISu3eVfOaQ" title="群组" target="_blank">
+                        <i class="fas fa-users"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 页面主内容 -->
+    <main class="container">
+        <h1 class="page-title">Couest 插件市场</h1>
+
+        <!-- 搜索和筛选区域 -->
+        <div class="search-filter">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="搜索插件...">
+            </div>
+
+            <div class="plugins-count">
+                <span id="plugins-count">所有插件(0)</span>
+            </div>
+
+            <div class="actions">
+                <button class="refresh-btn" id="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>刷新</span>
+                </button>
+
+                <div class="sort-container">
+                    <button class="sort-dropdown" id="sort-dropdown">
+                        <i class="fas fa-sort-amount-down"></i>
+                        <span>默认排序</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="sort-options" id="sort-options">
+                        <div class="sort-option" data-sort="default">默认排序</div>
+                        <div class="sort-option" data-sort="stars">按star数</div>
+                        <div class="sort-option" data-sort="updated">按更新时间</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 插件列表 -->
+        <div class="plugins-list" id="plugins-list">
+            <!-- 插件卡片将通过JavaScript动态加载 -->
+        </div>
+
+        <!-- 分页 -->
+        <div class="pagination" id="pagination">
+            <!-- 分页按钮将通过JavaScript动态生成 -->
+        </div>
+    </main>
+
+    <!-- 浮动添加按钮 -->
+    <button class="float-btn" id="add-plugin-btn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- 添加插件弹窗 -->
+    <div class="modal-overlay" id="add-plugin-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">添加新插件</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="plugin-form">
+                <div class="form-group">
+                    <label class="form-label" for="plugin-name">插件昵称:</label>
+                    <input type="text" id="plugin-name" class="form-input" placeholder="不超过10个字" maxlength="10" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="plugin-author">插件作者:</label>
+                    <input type="text" id="plugin-author" class="form-input" placeholder="不超过15个字" maxlength="15" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="plugin-desc">插件简介:</label>
+                    <input type="text" id="plugin-desc" class="form-input" placeholder="不超过30个字" maxlength="30" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">标签:</label>
+                    <div class="tags-input-container" id="tags-container">
+                        <!-- 标签将通过JavaScript动态添加 -->
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="tag-input" class="form-input" placeholder="输入标签（不超过5个字）" maxlength="5">
+                        <button type="button" class="add-tag-btn" id="add-tag-btn">
+                            <i class="fas fa-plus"></i>
+                            <span>添加标签</span>
+                        </button>
+                    </div>
+                    <small style="color: var(--light-text);">最多添加5个标签，每个标签不超过5个字</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="repo-link">仓库地址:</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fab fa-github"></i>
+                        <input type="url" id="repo-link" class="form-input" placeholder="https://github.com/xxx/Cucko_xxx" pattern="^https?://github\.com/.+/.+$" required>
+                    </div>
+                    <small style="color: var(--light-text);">必须是GitHub链接，仓库名开头必须是Cucko_</small>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="https://github.com/change-nx/change-nx.github.io/issues/new" target="_blank" class="submit-btn" id="submit-issue-btn">
+                        <i class="fab fa-github"></i>
+                        <span>提交issue</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 当前状态
+        let currentPlugins = [];
+        let filteredPlugins = [];
+        let currentPage = 1;
+        let pluginsPerPage = 10;
+        let currentSort = 'default';
+        let currentSearch = '';
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // DOM元素
+        const pluginsListEl = document.getElementById('plugins-list');
+        const pluginsCountEl = document.getElementById('plugins-count');
+        const paginationEl = document.getElementById('pagination');
+        const searchInputEl = document.getElementById('search-input');
+        const refreshBtnEl = document.getElementById('refresh-btn');
+        const sortDropdownEl = document.getElementById('sort-dropdown');
+        const sortOptionsEl = document.getElementById('sort-options');
+        const themeToggleEl = document.getElementById('theme-toggle');
+        const addPluginBtnEl = document.getElementById('add-plugin-btn');
+        const addPluginModalEl = document.getElementById('add-plugin-modal');
+        const closeModalEl = document.getElementById('close-modal');
+        const pluginFormEl = document.getElementById('plugin-form');
+        const pluginNameEl = document.getElementById('plugin-name');
+        const pluginAuthorEl = document.getElementById('plugin-author');
+        const pluginDescEl = document.getElementById('plugin-desc');
+        const repoLinkEl = document.getElementById('repo-link');
+        const tagsContainerEl = document.getElementById('tags-container');
+        const tagInputEl = document.getElementById('tag-input');
+        const addTagBtnEl = document.getElementById('add-tag-btn');
+        const submitIssueBtnEl = document.getElementById('submit-issue-btn');
+        
+        // 标签管理
+        let tags = [];
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            setTheme(currentTheme);
+            loadPlugins();
+            setupEventListeners();
+        });
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            themeToggleEl.addEventListener('click', toggleTheme);
+        
+            searchInputEl.addEventListener('input', function () {
+                currentSearch = this.value.trim();
+                filterPlugins();
+                renderPlugins();
+                renderPagination();
+            });
+        
+            refreshBtnEl.addEventListener('click', loadPlugins);
+        
+            sortDropdownEl.addEventListener('click', function () {
+                sortOptionsEl.classList.toggle('active');
+            });
+        
+            document.querySelectorAll('.sort-option').forEach(option => {
+                option.addEventListener('click', function () {
+                    const sortValue = this.getAttribute('data-sort');
+                    sortPlugins(sortValue);
+                    sortDropdownEl.querySelector('span').textContent = this.textContent;
+                    sortOptionsEl.classList.remove('active');
+                });
+            });
+        
+            document.addEventListener('click', function (event) {
+                if (!sortDropdownEl.contains(event.target) && !sortOptionsEl.contains(event.target)) {
+                    sortOptionsEl.classList.remove('active');
+                }
+            });
+        
+            addPluginBtnEl.addEventListener('click', function () {
+                addPluginModalEl.classList.add('active');
+            });
+        
+            closeModalEl.addEventListener('click', function () {
+                addPluginModalEl.classList.remove('active');
+            });
+        
+            addPluginModalEl.addEventListener('click', function (event) {
+                if (event.target === addPluginModalEl) {
+                    addPluginModalEl.classList.remove('active');
+                }
+            });
+        
+            addTagBtnEl.addEventListener('click', function () {
+                addTag();
+            });
+        
+            tagInputEl.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag();
+                }
+            });
+        
+            [pluginNameEl, pluginAuthorEl, pluginDescEl, repoLinkEl].forEach(input => {
+                input.addEventListener('input', updateIssueLink);
+            });
+        
+            pluginFormEl.addEventListener('submit', function (e) {
+                e.preventDefault();
+                prepareIssueSubmission();
+            });
+        }
+        
+        // 主题切换
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(currentTheme);
+            localStorage.setItem('theme', currentTheme);
+        }
+        
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = themeToggleEl.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // 加载插件数据（从 GitHub Issues）
+        async function loadPlugins() {
+            try {
+                pluginsListEl.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--light-text)">加载中...</div>';
+        
+                const response = await fetch('https://api.github.com/repos/change-nx/change-nx.github.io/issues?state=open&per_page=100', {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+        
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+                const issues = await response.json();
+        
+                const plugins = issues
+                    .map(issue => {
+                        try {
+                            // 尝试从 body 中解析 JSON
+                            const data = JSON.parse(issue.body);
+                            return {
+                                id: issue.number,
+                                title: issue.title,
+                                author: data.author || '未知',
+                                description: data.desc || data.description || '暂无简介',
+                                stars: 0, // 后面异步获取
+                                updated: issue.updated_at,
+                                tags: Array.isArray(data.标签) ? data.标签 : [],
+                                repo: data.link || ''
+                            };
+                        } catch (e) {
+                            console.warn(`无法解析 issue #${issue.number}:`, e);
+                            return null;
+                        }
+                    })
+                    .filter(Boolean); // 过滤无效数据
+        
+                // 并行获取每个仓库的 star 数和状态（防止404）
+                const validPlugins = await Promise.all(
+                    plugins.map(async plugin => {
+                        try {
+                            const repoUrl = plugin.repo.replace('https://github.com/', '').split('/');
+                            const owner = repoUrl[0];
+                            const repo = repoUrl[1];
+        
+                            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+                                headers: { 'Accept': 'application/vnd.github.v3+json' },
+                                method: 'HEAD' // 只请求头，更快
+                            });
+        
+                            if (res.ok) {
+                                // 再 GET 获取 stars
+                                const full = await fetch(res.url).then(r => r.json());
+                                return { ...plugin, stars: full.stargazers_count };
+                            } else {
+                                return null; // 404 或其他错误，不显示
+                            }
+                        } catch (err) {
+                            console.error(`检查仓库失败: ${plugin.repo}`, err);
+                            return null;
+                        }
+                    })
+                );
+        
+                currentPlugins = validPlugins.filter(Boolean);
+                filteredPlugins = [...currentPlugins];
+        
+                updatePluginsCount();
+                filterPlugins(); // 包含排序和分页重置
+                renderPlugins();
+                renderPagination();
+        
+            } catch (error) {
+                console.error('加载插件失败:', error);
+                pluginsListEl.innerHTML = `
+                    <div style="text-align: center; padding: 60px; color: var(--light-text);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
+                        <h3>加载失败</h3>
+                        <p>无法连接到 GitHub，请检查网络或稍后重试</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 更新插件计数
+        function updatePluginsCount() {
+            const total = currentPlugins.length;
+            const filtered = filteredPlugins.length;
+        
+            if (currentSearch) {
+                pluginsCountEl.textContent = `所有插件(${total})，搜索到${filtered}个`;
+            } else {
+                pluginsCountEl.textContent = `所有插件(${total})`;
+            }
+        }
+        
+        // 过滤插件
+        function filterPlugins() {
+            if (!currentSearch) {
+                filteredPlugins = [...currentPlugins];
+            } else {
+                const searchLower = currentSearch.toLowerCase();
+                filteredPlugins = currentPlugins.filter(plugin =>
+                    plugin.title.toLowerCase().includes(searchLower) ||
+                    plugin.author.toLowerCase().includes(searchLower) ||
+                    plugin.description.toLowerCase().includes(searchLower) ||
+                    plugin.tags.some(tag => tag.toLowerCase().includes(searchLower))
+                );
+            }
+        
+            sortPlugins(currentSort);
+            currentPage = 1;
+        }
+        
+        // 排序插件
+        function sortPlugins(sortType) {
+            currentSort = sortType;
+        
+            if (sortType === 'stars') {
+                filteredPlugins.sort((a, b) => b.stars - a.stars);
+            } else if (sortType === 'updated') {
+                filteredPlugins.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+            } else {
+                filteredPlugins.sort((a, b) => a.id - b.id);
+            }
+        }
+        
+        // 渲染插件列表
+        function renderPlugins() {
+            const startIndex = (currentPage - 1) * pluginsPerPage;
+            const endIndex = startIndex + pluginsPerPage;
+            const pluginsToShow = filteredPlugins.slice(startIndex, endIndex);
+        
+            pluginsListEl.innerHTML = '';
+        
+            if (pluginsToShow.length === 0) {
+                pluginsListEl.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: var(--light-text);">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">没有找到匹配的插件</h3>
+                        <p>尝试调整关键词或添加新插件</p>
+                    </div>
+                `;
+                return;
+            }
+        
+            pluginsToShow.forEach(plugin => {
+                const updatedDate = new Date(plugin.updated);
+                const formattedDate = updatedDate.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+        
+                let authorDisplay = plugin.author;
+                if (authorDisplay.length > 12) {
+                    authorDisplay = authorDisplay.substring(0, 10) + '...';
+                }
+        
+                const tagsHTML = plugin.tags.slice(0, 5).map(tag => {
+                    let tagDisplay = tag;
+                    if (tagDisplay.length > 5) {
+                        tagDisplay = tagDisplay.substring(0, 4) + '...';
+                    }
+                    return `<span class="tag">${tagDisplay}</span>`;
+                }).join('');
+        
+                const pluginCard = document.createElement('div');
+                pluginCard.className = 'plugin-card';
+                pluginCard.innerHTML = `
+                    <div class="plugin-header">
+                        <div>
+                            <h3 class="plugin-title">${escapeHtml(plugin.title)}</h3>
+                            <div class="plugin-author">${escapeHtml(authorDisplay)}</div>
+                        </div>
+                    </div>
+                    <p class="plugin-desc">${escapeHtml(plugin.description)}</p>
+                    <div class="plugin-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>${plugin.stars}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${formattedDate}</span>
+                        </div>
+                    </div>
+                    <div class="plugin-footer">
+                        <div class="plugin-tags">${tagsHTML}</div>
+                        <a href="${encodeURI(plugin.repo)}" target="_blank" class="repo-btn">
+                            <i class="fab fa-github"></i>
+                            <span>仓库</span>
+                        </a>
+                    </div>
+                `;
+                pluginsListEl.appendChild(pluginCard);
+            });
+        }
+        
+        // 转义 HTML 特殊字符，防止 XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 渲染分页
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredPlugins.length / pluginsPerPage);
+        
+            if (totalPages <= 1) {
+                paginationEl.innerHTML = '';
+                return;
+            }
+        
+            let paginationHTML = '';
+        
+            paginationHTML += `
+                <button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+        
+            if (currentPage > 3) {
+                paginationHTML += `<button class="page-btn" data-page="1">1</button>`;
+                if (currentPage > 4) paginationHTML += `<span class="page-dots">...</span>`;
+            }
+        
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                paginationHTML += `<button class="page-btn ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+        
+            if (currentPage < totalPages - 2) {
+                if (currentPage < totalPages - 3) paginationHTML += `<span class="page-dots">...</span>`;
+                paginationHTML += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+            }
+        
+            paginationHTML += `
+                <button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+        
+            paginationEl.innerHTML = paginationHTML;
+        
+            paginationEl.querySelectorAll('.page-btn:not(.disabled)').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const page = parseInt(this.getAttribute('data-page'));
+                    if (page && page !== currentPage) {
+                        currentPage = page;
+                        renderPlugins();
+                        renderPagination();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            });
+        }
+        
+        // 标签管理
+        function addTag() {
+            const tagValue = tagInputEl.value.trim();
+            if (!tagValue) return;
+            if (tags.length >= 5) {
+                alert('最多只能添加5个标签');
+                return;
+            }
+            if (tagValue.length > 5) {
+                alert('每个标签不能超过5个字');
+                return;
+            }
+            if (!tags.includes(tagValue)) {
+                tags.push(tagValue);
+                renderTags();
+                tagInputEl.value = '';
+                updateIssueLink();
+            }
+        }
+        
+        function removeTag(index) {
+            tags.splice(index, 1);
+            renderTags();
+            updateIssueLink();
+        }
+        
+        function renderTags() {
+            tagsContainerEl.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag-input-item';
+                tagEl.innerHTML = `${tag}<button type="button" class="remove-tag" data-index="${index}"><i class="fas fa-times"></i></button>`;
+                tagsContainerEl.appendChild(tagEl);
+            });
+            tagsContainerEl.querySelectorAll('.remove-tag').forEach(btn => {
+                btn.addEventListener('click', () => removeTag(parseInt(btn.getAttribute('data-index'))));
+            });
+        }
+        
+        // 更新提交 issue 的链接
+        function updateIssueLink() {
+            const title = encodeURIComponent(pluginNameEl.value.trim() || '');
+            const author = pluginAuthorEl.value.trim();
+            const desc = pluginDescEl.value.trim();
+            const link = repoLinkEl.value.trim();
+        
+            const body = encodeURIComponent(JSON.stringify({
+                author: author || '',
+                desc: desc || '',
+                标签: tags,
+                link: link || ''
+            }, null, 2));
+        
+            const url = `https://github.com/change-nx/change-nx.github.io/issues/new?title=${title}&body=${body}`;
+            submitIssueBtnEl.href = url;
+        
+            // 实时校验仓库格式
+            const githubRegex = /^https:\/\/github\.com\/[^\/]+\/[^\/]+$/;
+            const cuckoRegex = /Cucko_/;
+            const isValid = githubRegex.test(link) && cuckoRegex.test(link);
+        
+            repoLinkEl.style.borderColor = isValid || !link ? '' : '#ff6b6b';
+        }
+        
+        function prepareIssueSubmission() {
+            const fields = [
+                { el: pluginNameEl, msg: '请输入插件昵称' },
+                { el: pluginAuthorEl, msg: '请输入插件作者' },
+                { el: pluginDescEl, msg: '请输入插件简介' },
+                { el: repoLinkEl, msg: '请输入仓库地址' }
+            ];
+        
+            for (let field of fields) {
+                if (!field.el.value.trim()) {
+                    alert(field.msg);
+                    field.el.focus();
+                    return;
+                }
+            }
+        
+            const link = repoLinkEl.value.trim();
+            const githubRegex = /^https:\/\/github\.com\/[^\/]+\/[^\/]+$/;
+            const cuckoRegex = /Cucko_/;
+        
+            if (!githubRegex.test(link)) {
+                alert('请输入有效的 GitHub 仓库链接');
+                repoLinkEl.focus();
+                return;
+            }
+        
+            if (!cuckoRegex.test(link)) {
+                alert('仓库名开头必须是 Cucko_');
+                repoLinkEl.focus();
+                return;
+            }
+        
+            alert('点击下方“提交issue”按钮前往 GitHub 提交。审核通过后将自动出现在插件市场中！');
+        }
+    </script>
+
+</body>
+
+</html>

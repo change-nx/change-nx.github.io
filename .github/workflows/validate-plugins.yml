@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write        # 允许关闭/删除 issue
+      contents: read       # 允许读取仓库内容
+    
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -19,43 +21,89 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: "change-nx/change-nx.github.io"
         run: |
+          set -e  # 出错时立即停止
+          
+          # 检查 jq 是否可用
+          if ! command -v jq &> /dev/null; then
+            echo "jq 命令未找到，正在安装..."
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+          
           # 获取所有打开的 issues
-          issues=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
-            "https://api.github.com/repos/$REPO/issues?state=open&per_page=100")
-
-          echo "$issues" | jq -r '.[] | "$.number),$.body)"' | while IFS=',' read -r number body; do
-            # URL 解码 body
-            body=$(echo "$body" | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote_plus(sys.stdin.read()))")
-
-            # 提取 link 字段
-            link=$(echo "$body" | jq -r '.link // empty')
+          echo "正在获取 issues..."
+          response=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/$REPO/issues?state=open&per_page=100" || echo "[]")
+          
+          # 检查是否获取到有效数据
+          if echo "$response" | jq -e 'type=="array"' > /dev/null 2>&1; then
+            echo "成功获取 issues"
+            issues_count=$(echo "$response" | jq '. | length')
+            echo "找到 $issues_count 个打开的 issues"
+          else
+            echo "无法获取 issues 或返回格式错误"
+            echo "响应内容：$response"
+            exit 1
+          fi
+          
+          # 处理每个 issue
+          echo "$response" | jq -r '.[] | "\(.number),\(.body)"' | while IFS=',' read -r number body_raw; do
+            echo "处理 issue #$number"
+            
+            # 检查 body 是否为空
+            if [[ "$body_raw" == "null" ]] || [[ -z "$body_raw" ]]; then
+              echo "跳过 issue #$number：body 为空"
+              continue
+            fi
+            
+            # 解析 JSON body 获取 link
+            link=$(echo "$body_raw" | jq -r '.link // ""' 2>/dev/null || echo "")
+            
+            # 如果 jq 解析失败，尝试其他方法
             if [[ -z "$link" ]]; then
-              echo "跳过 issue #$number：未找到 link 字段"
+              # 尝试手动提取 link 字段
+              link=$(echo "$body_raw" | grep -o '"link"\s*:\s*"[^"]*"' | head -1 | cut -d'"' -f4 || echo "")
+            fi
+            
+            if [[ -z "$link" ]]; then
+              echo "跳过 issue #$number：未找到有效的 link 字段"
               continue
             fi
-
-            # 提取仓库路径
-            repo_path=$(echo "$link" | sed -E 's|https?://github\.com/([^/]+)/([^/]+).*|\1/\2|')
-            if [[ "$repo_path" == "$link" ]]; then
-              echo "跳过 issue #$number：无法解析仓库地址"
+            
+            echo "找到链接: $link"
+            
+            # 提取仓库路径（从 GitHub URL）
+            if [[ "$link" =~ https?://github\.com/([^/]+/[^/#?]+) ]]; then
+              repo_path="${BASH_REMATCH[1]}"
+              echo "解析到仓库路径: $repo_path"
+            else
+              echo "跳过 issue #$number：链接不是有效的 GitHub 仓库 URL"
               continue
             fi
-
+            
             # 检查仓库是否存在
+            echo "检查仓库是否存在: $repo_path"
             status_code=$(curl -o /dev/null -s -w "%{http_code}" \
               -H "Authorization: Bearer $GITHUB_TOKEN" \
               -H "Accept: application/vnd.github.v3+json" \
-              --head "https://api.github.com/repos/$repo_path")
-
+              --head "https://api.github.com/repos/$repo_path" || echo "000")
+            
+            echo "仓库状态码: $status_code"
+            
             if [[ $status_code -eq 404 ]]; then
-              echo "⚠️ 仓库 $link 不存在 (404)，正在关闭 issue #$number..."
+              echo "⚠️ 仓库 $link 不存在 (404)，正在删除 issue #$number..."
+              # 注意：这里是 DELETE 操作，会直接删除 issue
               curl -X DELETE \
                 -H "Authorization: Bearer $GITHUB_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/repos/$REPO/issues/$number"
-            else
+                "https://api.github.com/repos/$REPO/issues/$number" 2>/dev/null || echo "删除失败"
+            elif [[ $status_code -eq 200 ]] || [[ $status_code -eq 301 ]] || [[ $status_code -eq 302 ]]; then
               echo "✅ 仓库 $repo_path 正常 ($status_code)"
+            else
+              echo "⚠️ 仓库 $repo_path 返回异常状态码: $status_code"
             fi
-
+            
             sleep 1  # 避免速率限制
           done
+          
+          echo "处理完成"

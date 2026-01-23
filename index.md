@@ -1,18 +1,6 @@
 ---
-layout: with-sidebar
+layout: sidebar
 title: "我的页面"
----
-
-# 我的网站
-
-> **📂 网站导航**
-> - [🏠 返回首页](/)
-> - [👨‍💻 关于作者](/about)
-> - [📚 技术文档](/docs)
-> - [✍️ 博客文章](/blog)
-> - [💼 项目展示](/projects)
-> - [📬 联系方式](/contact)
-
 ---
 
 ## 主页内容

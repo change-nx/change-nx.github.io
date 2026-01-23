@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 搭建教程
+title: 函数文档
 ---
 
 一、通用函数

@@ -3,6 +3,8 @@ layout: home
 title: 首页
 ---
 
+# 文档
+
 ## Web
 [插件市场](market.html)
 

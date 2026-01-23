@@ -1,9 +1,10 @@
 ---
-layout: post
+layout: home
 title: 首页
 ---
 
-#介绍
-```python
-print("1")
-```
+## Web
+[插件市场](market.html)
+
+## Docs
+[搭建教程](docs/搭建教程.md)

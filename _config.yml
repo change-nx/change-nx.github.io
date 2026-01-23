@@ -3,6 +3,3 @@ description: " "
 theme: jekyll-theme-minimal
 github:
   is_user_page: false
-footer:
-  links: false
-  copyright: false

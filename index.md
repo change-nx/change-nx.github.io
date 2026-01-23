@@ -1,0 +1,8 @@
+---
+layout: default
+title: 首页
+---
+
+# 欢迎访问我的网站
+
+[查看我的 README](/README)

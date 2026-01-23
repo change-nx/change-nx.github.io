@@ -1,0 +1,10 @@
+- name: 首页
+  link: /
+- name: 关于
+  link: /about.html
+- name: 博客
+  link: /blog/
+- name: 项目
+  link: /projects/
+- name: 联系
+  link: /contact.html

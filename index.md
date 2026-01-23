@@ -1,3 +1,8 @@
+---
+layout: with-sidebar
+title: "我的页面"
+---
+
 # 我的网站
 
 > **📂 网站导航**

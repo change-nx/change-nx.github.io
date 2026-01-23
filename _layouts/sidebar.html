@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .sidebar {
+      width: 250px;
+      flex-shrink: 0;
+      padding: 20px;
+      position: sticky;
+      top: 20px;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+    /* 导航样式 */
+    .nav-list {
+      list-style: none;
+      padding: 0;
+    }
+    .nav-item {
+      margin-bottom: 10px;
+    }
+    .nav-link {
+      display: block;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .nav-link:hover {
+      background: #f0f0f0;
+    }
+    .nav-link.active {
+      background: #007acc;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          {% for item in site.data.sidebar %}
+          <li class="nav-item">
+            <a href="{{ item.link }}" 
+               class="nav-link {% if page.url == item.link %}active{% endif %}">
+              {{ item.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="content">
+      {{ content }}
+    </main>
+  </div>
+</body>
+</html>

@@ -8,4 +8,5 @@ title: 首页
 
 # Docs
 [搭建教程](docs/Set_Guide)
+
 [变量文档](docs/Values)

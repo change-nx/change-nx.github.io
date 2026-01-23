@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="UTF-8">
+    <!-- ... 头部内容保持不变 ... -->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <!-- 这个标题会自动从_config.yml的title读取 -->
+        <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
+        <!-- 描述也会自动从_config.yml读取 -->
+        <p>{{ site.description | default: site.github.project_tagline }}</p>
+      </header>
+      <section>
+        <!-- 这里会插入Markdown文件的内容 -->
+        {{ content }}
+      </section>
+      <!-- 这里删除了footer部分 -->
+    </div>
+    <script src="{{ '/assets/js/scale.fix.js' | relative_url }}"></script>
+  </body>
+</html>

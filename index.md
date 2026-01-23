@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: default
 title: 首页
 ---
 
@@ -9,4 +9,4 @@ title: 首页
 [插件市场](market.html)
 
 ## Docs
-[搭建教程](docs/搭建教程.md)
+[搭建教程](docs/搭建教程)

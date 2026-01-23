@@ -2,8 +2,8 @@
 layout: sidebar
 title: "我的页面"
 ---
+{{ site.sidebar }}
 
-## 主页内容
 
 ### 欢迎访问！
 

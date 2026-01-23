@@ -10,3 +10,5 @@ title: 首页
 [🛠️ 搭建教程](docs/Set_Guide)
 
 [📊 变量文档](docs/Values)
+
+[📝 函数文档](docs/function)

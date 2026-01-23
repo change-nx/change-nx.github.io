@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
 title: Cucko
-description: ""
+description: false
 github:
   is_user_page: false

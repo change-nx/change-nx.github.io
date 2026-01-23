@@ -16,6 +16,7 @@ title: 首页
 
 [📝 函数文档](docs/function)
 
-# 👥 社群
+# 👥 Group
 [💬 用户交流](https://qm.qq.com/q/RCOiR0ET0)
+
 [👨‍💻 技术交流](https://qm.qq.com/q/YOaHQl0Twm)

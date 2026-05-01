@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cucko</title>
+    <!-- marked.js 解析 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- highlight.js 代码高亮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Material Symbols 图标库 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ==================== 顶部栏 ==================== */
+        .app-bar {
+            background: #ffffff;
+            height: 64px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .app-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .app-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: #1a1c1e;
+            letter-spacing: -0.2px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .menu-btn .material-symbols-outlined {
+            font-size: 28px;
+            color: #1a1c1e;
+        }
+
+        /* ==================== 主内容区 ==================== */
+        .main-content {
+            margin-top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+            background: #ffffff;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 48px;
+        }
+
+        /* Markdown 渲染样式 */
+        .markdown-body {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1a1c1e;
+        }
+
+        .markdown-body h1 {
+            font-size: 2em;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.3em;
+            margin: 24px 0 16px;
+        }
+
+        .markdown-body h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.3em;
+            margin: 24px 0 16px;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.25em;
+            margin: 20px 0 12px;
+        }
+
+        .markdown-body p {
+            margin: 12px 0;
+        }
+
+        .markdown-body code {
+            background: #f0f0f0;
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 85%;
+        }
+
+        .markdown-body pre {
+            background: #1e1e1e;
+            padding: 16px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .markdown-body pre code {
+            background: none;
+            color: #d4d4d4;
+            padding: 0;
+        }
+
+        .markdown-body table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid #e0e0e0;
+            padding: 10px 12px;
+        }
+
+        .markdown-body th {
+            background: #f8f8f8;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid #6750a4;
+            color: #555;
+            padding-left: 16px;
+            margin: 16px 0;
+        }
+
+        .markdown-body a {
+            color: #6750a4;
+            text-decoration: none;
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        /* ==================== 侧滑抽屉 ==================== */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 320px;
+            max-width: 85%;
+            background: #ffffff;
+            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            z-index: 201;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            padding: 20px 20px 12px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .drawer-header h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1a1c1e;
+        }
+
+        .close-drawer {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .close-drawer:hover {
+            background: #e8e8e8;
+        }
+
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        /* ==================== 文件树样式 ==================== */
+        .tree-node {
+            list-style: none;
+            user-select: none;
+        }
+
+        .tree-node-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px 10px 20px;
+            cursor: pointer;
+            gap: 12px;
+            transition: background 0.15s;
+            border-radius: 0 28px 28px 0;
+            margin-right: 8px;
+        }
+
+        .tree-node-item:hover {
+            background: #f0f0f0;
+        }
+
+        .tree-node-item.active {
+            background: #eaddff;
+        }
+
+        .tree-node-item.active .node-title {
+            color: #6750a4;
+            font-weight: 500;
+        }
+
+        .expand-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+
+        .expand-icon .material-symbols-outlined {
+            font-size: 20px;
+            color: #666;
+            transition: transform 0.2s;
+        }
+
+        .expand-icon.collapsed .material-symbols-outlined {
+            transform: rotate(0deg);
+        }
+
+        .expand-icon:not(.collapsed) .material-symbols-outlined {
+            transform: rotate(90deg);
+        }
+
+        .node-icon {
+            width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .node-icon .material-symbols-outlined {
+            font-size: 20px;
+            color: #5e5e5e;
+        }
+
+        .node-title {
+            flex: 1;
+            font-size: 14px;
+            color: #1a1c1e;
+        }
+
+        .children {
+            padding-left: 28px;
+            display: none;
+        }
+
+        .children.expanded {
+            display: block;
+        }
+
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #999;
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c0c0c0;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .content-container {
+                padding: 24px 20px;
+            }
+
+            .app-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部栏 -->
+    <div class="app-bar">
+        <div class="app-bar-left">
+            <div class="app-icon" id="appIcon">
+                <!-- SVG 图标会在这里动态加载 -->
+            </div>
+            <span class="app-title">Cucko Doc</span>
+        </div>
+        <button class="menu-btn" id="menuBtn">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content" id="mainContent">
+        <div class="content-container">
+            <div class="markdown-body" id="markdownContent">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 侧滑抽屉（目录） -->
+    <div class="drawer-overlay" id="drawerOverlay">
+        <div class="drawer" id="drawer">
+            <div class="drawer-header">
+                <h3>目录</h3>
+                <button class="close-drawer" id="closeDrawerBtn">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="drawer-content">
+                <ul class="tree-node" id="fileTree"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 存储文档树数据
+        let docsTree = [];
+        // 扁平化映射 path -> { name, content, path }
+        let contentMap = new Map();
+        // 所有文件节点列表
+        let fileNodesList = [];
+        // 当前选中的文档路径
+        let currentPath = "";
+        // 是否已加载完成
+        let isLoaded = false;
+
+        // ==================== 构建扁平化映射 ====================
+        function buildContentMap(nodes, parentPath = "") {
+            for (const node of nodes) {
+                if (node.list) {
+                    // 文件夹
+                    buildContentMap(node.list, parentPath);
+                } else if (node.content !== undefined) {
+                    // 文件（必须有 content）
+                    const fullPath = node.path || node.name;
+                    contentMap.set(fullPath, {
+                        name: node.name,
+                        content: node.content,
+                        path: fullPath
+                    });
+                    fileNodesList.push({
+                        name: node.name,
+                        path: fullPath,
+                        type: "file"
+                    });
+                }
+            }
+        }
+
+        // ==================== 渲染文件树 ====================
+        function renderTree(nodes, level = 0) {
+            let html = '';
+            for (const node of nodes) {
+                if (node.list) {
+                    // 文件夹
+                    const folderId = `folder_${node.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_')}_${Math.random().toString(36).substr(2, 6)}`;
+                    html += `
+                        <li class="tree-node" data-type="folder" data-name="${escapeHtml(node.name)}">
+                            <div class="tree-node-item">
+                                <div class="expand-icon collapsed" data-folder-id="${folderId}">
+                                    <span class="material-symbols-outlined">chevron_right</span>
+                                </div>
+                                <div class="node-icon">
+                                    <span class="material-symbols-outlined">folder</span>
+                                </div>
+                                <span class="node-title">${escapeHtml(node.name)}</span>
+                            </div>
+                            <ul class="children" id="${folderId}">
+                                ${renderTree(node.list, level + 1)}
+                            </ul>
+                        </li>
+                    `;
+                } else {
+                    // 文件
+                    const filePath = node.path || node.name;
+                    const isActive = currentPath === filePath;
+                    html += `
+                        <li class="tree-node" data-type="file" data-path="${escapeHtml(filePath)}">
+                            <div class="tree-node-item ${isActive ? 'active' : ''}">
+                                <div class="node-icon">
+                                    <span class="material-symbols-outlined">description</span>
+                                </div>
+                                <span class="node-title">${escapeHtml(node.name)}</span>
+                            </div>
+                        </li>
+                    `;
+                }
+            }
+            return html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 刷新树并绑定事件
+        function refreshTree() {
+            const treeContainer = document.getElementById('fileTree');
+            if (!docsTree.length) {
+                treeContainer.innerHTML = '<div style="padding: 20px; color: #999;">暂无文档</div>';
+                return;
+            }
+            treeContainer.innerHTML = renderTree(docsTree);
+
+            // 绑定文件点击
+            document.querySelectorAll('[data-type="file"]').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const path = el.dataset.path;
+                    if (path && contentMap.has(path)) {
+                        currentPath = path;
+                        refreshTree();      // 刷新高亮
+                        renderContentByPath(path);
+                        closeDrawer();       // 移动端自动关闭抽屉
+                    }
+                });
+            });
+
+            // 绑定文件夹展开/收起
+            document.querySelectorAll('.expand-icon').forEach(icon => {
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const folderId = icon.dataset.folderId;
+                    const childrenUl = document.getElementById(folderId);
+                    if (childrenUl) {
+                        const isCollapsed = icon.classList.contains('collapsed');
+                        if (isCollapsed) {
+                            icon.classList.remove('collapsed');
+                            childrenUl.classList.add('expanded');
+                        } else {
+                            icon.classList.add('collapsed');
+                            childrenUl.classList.remove('expanded');
+                        }
+                    }
+                });
+            });
+
+            // 默认展开所有文件夹
+            document.querySelectorAll('.children').forEach(ul => {
+                ul.classList.add('expanded');
+            });
+            document.querySelectorAll('.expand-icon').forEach(icon => {
+                icon.classList.remove('collapsed');
+            });
+        }
+
+        // 根据路径渲染 Markdown 内容
+        function renderContentByPath(path) {
+            const doc = contentMap.get(path);
+            if (doc && doc.content) {
+                const html = marked.parse(doc.content);
+                document.getElementById('markdownContent').innerHTML = html;
+                // 代码高亮
+                document.querySelectorAll('#markdownContent pre code').forEach(block => {
+                    hljs.highlightElement(block);
+                });
+                // 更新页面标题
+                document.title = `${doc.name} - Doc`;
+            } else {
+                document.getElementById('markdownContent').innerHTML = '<p style="color: #999;">文档内容不存在</p>';
+            }
+        }
+
+        // ==================== 加载 docs.json ====================
+        async function loadDocs() {
+            try {
+                const response = await fetch('docs.json?v=' + Date.now());
+                if (!response.ok) {
+                    throw new Error('docs.json 加载失败');
+                }
+                docsTree = await response.json();
+                
+                // 构建映射
+                contentMap.clear();
+                fileNodesList = [];
+                buildContentMap(docsTree);
+                
+                // 设置默认文档：优先找 path 或 name 为 "首页" 的文档
+                let defaultDoc = null;
+                for (const item of fileNodesList) {
+                    if (item.path === "首页" || item.name === "首页") {
+                        defaultDoc = item;
+                        break;
+                    }
+                }
+                // 如果没有找到"首页"，用第一个文档
+                if (!defaultDoc && fileNodesList.length > 0) {
+                    defaultDoc = fileNodesList[0];
+                }
+                
+                if (defaultDoc) {
+                    currentPath = defaultDoc.path;
+                }
+                
+                // 渲染界面
+                refreshTree();
+                if (currentPath) {
+                    renderContentByPath(currentPath);
+                } else {
+                    document.getElementById('markdownContent').innerHTML = '<p style="color: #999;">请先在 docs.json 中添加文档</p>';
+                }
+                
+                isLoaded = true;
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('markdownContent').innerHTML = `
+                    <div style="color: #c62828; padding: 20px; text-align: center;">
+                        <h3>加载失败</h3>
+                        <p>无法加载 docs.json 文件</p>
+                        <p style="font-size: 14px;">请确保 docs.json 文件存在且格式正确</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== 加载 SVG 图标 ====================
+        async function loadLogo() {
+            try {
+                const response = await fetch('logo.svg');
+                if (response.ok) {
+                    const svgText = await response.text();
+                    document.getElementById('appIcon').innerHTML = svgText;
+                } else {
+                    // 如果没有 logo.svg，显示默认图标
+                    document.getElementById('appIcon').innerHTML = '<span style="font-size: 28px;">📄</span>';
+                }
+            } catch (e) {
+                document.getElementById('appIcon').innerHTML = '<span style="font-size: 28px;">📄</span>';
+            }
+        }
+
+        // ==================== 抽屉控制 ====================
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const menuBtn = document.getElementById('menuBtn');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+
+        function openDrawer() {
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        menuBtn.addEventListener('click', openDrawer);
+        closeDrawerBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        // 点击主内容区关闭抽屉（移动端友好）
+        document.getElementById('mainContent').addEventListener('click', () => {
+            if (drawer.classList.contains('open')) {
+                closeDrawer();
+            }
+        });
+
+        // ==================== 初始化 ====================
+        loadLogo();
+        loadDocs();
+    </script>
+</body>
+</html>

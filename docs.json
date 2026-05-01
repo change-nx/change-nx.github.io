@@ -1,0 +1,22 @@
+[
+  {
+    "name": "首页",
+    "path": "首页",
+    "content": "# 支持多平台的BOT框架\n> 当前支持平台\n\n>   •QQ官机<br>\n>   •OneBot v11\n\n## 更新地址\n\n[https://github.com/change-nx/Cucko](https://github.com/change-nx/Cucko)\n\n## 交流社区\n\n[企鹅①群](https://qm.qq.com/q/8oZvBkLdSw)"
+  },
+  {
+    "name": "配置",
+    "list": [
+      {
+        "name": "OneBot v11",
+        "path": "配置/OneBot v11",
+        "content": ""
+      },
+      {
+        "name": "QQ官机",
+        "path": "配置/QQ官机",
+        "content": "# QQ官机教程\n\n## 准备工作\n> QQ官机([点击注册](http://q.qq.com))\n\n> PHP74(Windows需手动安装Sodium)\n\n"
+      }
+    ]
+  }
+]

@@ -8,8 +8,8 @@
     "name": "配置",
     "list": [
       {
-        "name": "OneBot v11",
-        "path": "配置/OneBot v11",
+        "name": "OneBot",
+        "path": "配置/OneBot",
         "content": "# OneBot \n本框架使用基于napcat进行构造,请前往NapCat官网进行搭建[NapCat](https://napneko.github.io/guide/napcat)\n\n## NapCat配置\n搭建好NapCat并进行登录进入WebUI后\n[①][/data/1.jpg]\n[②][/data/2.jpg]\n[③][/data/3.jpg]\n[④][/data/4.jpg]\n\n> 此时已配置完毕\n\n## 框架配置\n打开Adapter.json添加json\n\n```json\n{\n    \"id\": \"自定义\",\n    \"QQ\": 你机器人的QQ,\n    \"type\": \"OneBot\",\n    \"token\": \"上报Token\",\n    \"API\": \"http://127.0.0.1:3000\",\n    \"APItoken\": \"HTTPtoken\"\n}\n```\n\n因框架下载完毕自带了一个Example插件,此时只需前往群聊发送\"变量\",如果机器有有回复则为搭建成功"
       },
       {

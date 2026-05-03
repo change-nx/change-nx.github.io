@@ -5,13 +5,13 @@
 搭建好NapCat并进行登录进入WebUI后
 
 ①
-![①](Doc/配置/data/1.jpg)
+![①](Doc/框架配置/data/1.jpg)
 ②
-![②](Doc/配置/data/2.jpg)
+![②](Doc/框架配置/data/2.jpg)
 ③
-![③](Doc/配置/data/3.jpg)
+![③](Doc/框架配置/data/3.jpg)
 ④
-![④](Doc/配置/data/4.jpg)
+![④](Doc/框架配置/data/4.jpg)
 
 > 此时已配置完毕
 

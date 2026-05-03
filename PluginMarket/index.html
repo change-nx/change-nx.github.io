@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>插件市场</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #f5f8ff;
+    --surface:  #ffffff;
+    --border:   #e4eaf5;
+    --border2:  #c8d6ee;
+    --blue:     #3b7de8;
+    --blue-lt:  #eaf1fd;
+    --blue-mid: #d0e1fa;
+    --text:     #1a2035;
+    --sub:      #6b7a99;
+    --faint:    #a8b4cc;
+    --tag-ob:   #e8f4ff;
+    --tag-ob-t: #2872cc;
+    --tag-qq:   #eef6ff;
+    --tag-qq-t: #4b9de0;
+    --r:        12px;
+    --r-sm:     8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', 'Noto Sans SC', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* thin top line */
+  body::before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue) 0%, #7eb8f7 100%);
+  }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── Header ── */
+  header {
+    padding: 44px 0 36px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    animation: fadeUp .45s ease both;
+  }
+
+  .header-left h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .header-left p {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--sub);
+    font-weight: 300;
+  }
+
+  .submit-btn {
+    padding: 9px 20px;
+    background: var(--blue);
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .18s, transform .18s, box-shadow .18s;
+    white-space: nowrap;
+    letter-spacing: 0.1px;
+  }
+  .submit-btn:hover {
+    background: #2b6dd6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(59,125,232,.25);
+  }
+
+  /* ── Meta row ── */
+  .meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 22px;
+    animation: fadeUp .45s .08s ease both;
+  }
+
+  .filters { display: flex; gap: 6px; }
+
+  .filter-btn {
+    padding: 6px 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    color: var(--sub);
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .16s;
+  }
+  .filter-btn:hover { border-color: var(--border2); color: var(--text); }
+  .filter-btn.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+  }
+
+  .counts {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--faint);
+  }
+  .counts b { color: var(--sub); font-weight: 500; }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-bottom: 60px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 22px;
+    transition: border-color .18s, box-shadow .18s, transform .18s;
+    animation: fadeUp .4s ease both;
+  }
+  .card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 4px 20px rgba(59,125,232,.07);
+    transform: translateY(-2px);
+  }
+
+  .card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+  }
+
+  .card-author {
+    font-size: 11.5px;
+    color: var(--faint);
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--sub);
+    line-height: 1.65;
+    font-weight: 300;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .tags { display: flex; gap: 5px; }
+
+  .tag {
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  .tag-onebot { background: var(--tag-ob); color: var(--tag-ob-t); }
+  .tag-qq     { background: var(--tag-qq); color: var(--tag-qq-t); }
+
+  .card-link {
+    font-size: 12px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity .15s;
+    white-space: nowrap;
+  }
+  .card-link:hover { opacity: .7; }
+
+  /* ── Empty ── */
+  .empty {
+    display: none;
+    text-align: center;
+    padding: 80px 0;
+    color: var(--faint);
+    font-size: 14px;
+    grid-column: 1/-1;
+  }
+  .empty.show { display: block; }
+
+  /* ── Modal ── */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(20,30,60,.28);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .22s;
+  }
+  .overlay.show { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%; max-width: 440px;
+    padding: 30px;
+    transform: translateY(10px) scale(.98);
+    transition: transform .22s;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .overlay.show .modal { transform: none; }
+
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .modal-head h2 { font-size: 16px; font-weight: 600; letter-spacing: -.2px; }
+
+  .modal-close {
+    width: 28px; height: 28px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    font-size: 17px;
+    color: var(--sub);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+    line-height: 1;
+  }
+  .modal-close:hover { background: var(--border); color: var(--text); }
+
+  .fg { margin-bottom: 15px; }
+
+  .fg label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--sub);
+    margin-bottom: 6px;
+    letter-spacing: .2px;
+  }
+
+  .fg label .req { color: var(--blue); }
+
+  .fg input, .fg textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 9px 13px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .fg input:focus, .fg textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59,125,232,.1);
+  }
+  .fg input::placeholder, .fg textarea::placeholder { color: var(--faint); font-size: 12.5px; }
+  .fg textarea { resize: vertical; min-height: 76px; line-height: 1.6; }
+
+  /* tag pick */
+  .tag-row { display: flex; gap: 8px; }
+  .tag-pick {
+    flex: 1;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+  }
+  .tag-pick:hover { border-color: var(--border2); }
+  .tag-pick.sel-ob { border-color: var(--blue); background: var(--blue-lt); }
+  .tag-pick.sel-qq { border-color: #4b9de0; background: var(--tag-qq); }
+  .tag-pick-name { font-size: 13.5px; font-weight: 600; color: var(--text); display: block; margin-bottom: 2px; }
+  .tag-pick-sub  { font-size: 10.5px; color: var(--faint); display: block; }
+
+  /* actions */
+  .modal-actions { display: flex; gap: 9px; margin-top: 22px; }
+
+  .btn-sec {
+    flex: 1; padding: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--sub);
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-sec:hover { border-color: var(--border2); color: var(--text); }
+
+  .btn-pri {
+    flex: 2; padding: 10px;
+    background: var(--blue);
+    border: none;
+    border-radius: var(--r-sm);
+    color: #fff;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+  }
+  .btn-pri:hover { background: #2b6dd6; box-shadow: 0 4px 14px rgba(59,125,232,.3); }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 18px 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--faint);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .card:nth-child(1)  { animation-delay: .05s }
+  .card:nth-child(2)  { animation-delay: .09s }
+  .card:nth-child(3)  { animation-delay: .13s }
+  .card:nth-child(4)  { animation-delay: .17s }
+  .card:nth-child(5)  { animation-delay: .21s }
+  .card:nth-child(6)  { animation-delay: .25s }
+  .card:nth-child(n+7){ animation-delay: .28s }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="header-left">
+      <h1>插件市场</h1>
+      <p>社区开源插件，经过人工审核</p>
+    </div>
+    <button class="submit-btn" onclick="openModal()">提交插件</button>
+  </header>
+
+  <div class="meta-row">
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('all',this)">全部 <span id="c-all">0</span></button>
+      <button class="filter-btn" onclick="setFilter('OneBot',this)">OneBot <span id="c-ob">0</span></button>
+      <button class="filter-btn" onclick="setFilter('QQ',this)">QQ <span id="c-qq">0</span></button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="empty show" id="empty">暂无插件</div>
+  </div>
+</div>
+
+<footer><div class="wrap">插件市场 · 数据托管于 GitHub · 审核通过后展示</div></footer>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>提交插件</h2>
+      <div class="modal-close" onclick="closeModal()">×</div>
+    </div>
+
+    <div class="fg">
+      <label>插件昵称 <span class="req">*</span></label>
+      <input id="f-name" placeholder="例：消息转发插件" maxlength="40">
+    </div>
+    <div class="fg">
+      <label>作者 <span class="req">*</span></label>
+      <input id="f-author" placeholder="GitHub 用户名或昵称" maxlength="40">
+    </div>
+    <div class="fg">
+      <label>描述 <span class="req">*</span></label>
+      <textarea id="f-desc" placeholder="简单描述插件功能（50字以内）" maxlength="200"></textarea>
+    </div>
+    <div class="fg">
+      <label>仓库地址 <span class="req">*</span></label>
+      <input id="f-repo" placeholder="https://github.com/user/repo" type="url">
+    </div>
+    <div class="fg">
+      <label>标签 <span class="req">*</span></label>
+      <div class="tag-row">
+        <div class="tag-pick" id="tp-ob" onclick="pickTag('OneBot')">
+          <span class="tag-pick-name">OneBot</span>
+          <span class="tag-pick-sub">OneBot 协议</span>
+        </div>
+        <div class="tag-pick" id="tp-qq" onclick="pickTag('QQ')">
+          <span class="tag-pick-name">QQ</span>
+          <span class="tag-pick-sub">QQ 官方接口</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-sec" onclick="closeModal()">取消</button>
+      <button class="btn-pri" onclick="doSubmit()">跳转 GitHub 发布</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ★ 改成你自己的仓库
+const REPO = 'change-nx/change-nx.github.io';
+const JSON_URL = `https://raw.githubusercontent.com/${REPO}/master/PluginMarket/plugins.json`;
+
+let plugins = [], filter = 'all', pickedTag = '';
+
+async function load() {
+  try {
+    const r = await fetch(JSON_URL + '?_=' + Date.now());
+    if (r.ok) plugins = await r.json();
+  } catch {
+    plugins = [
+      { name:'消息转发', author:'example', description:'支持多群消息转发，灵活配置规则', repo:'https://github.com/example/a', tags:['OneBot'] },
+      { name:'签到系统', author:'dev_chan', description:'每日签到积分，支持排行榜', repo:'https://github.com/example/b', tags:['QQ'] },
+      { name:'B站推送', author:'bili_bot', description:'监控UP主动态，自动推送到群', repo:'https://github.com/example/c', tags:['OneBot'] },
+      { name:'ChatGPT',  author:'ai_bot',  description:'群内与AI对话，支持上下文记忆', repo:'https://github.com/example/d', tags:['QQ'] },
+    ];
+  }
+  render(); counts();
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  const list = filter === 'all' ? plugins : plugins.filter(p => p.tags?.includes(filter));
+  if (!list.length) { grid.innerHTML = '<div class="empty show">暂无插件</div>'; return; }
+  grid.innerHTML = list.map(p => {
+    const tags = (p.tags||[]).map(t =>
+      `<span class="tag ${t==='OneBot'?'tag-onebot':'tag-qq'}">${t}</span>`
+    ).join('');
+    return `<div class="card">
+      <div class="card-name">${x(p.name)}</div>
+      <div class="card-author">${x(p.author)}</div>
+      <div class="card-desc">${x(p.description)}</div>
+      <div class="card-footer">
+        <div class="tags">${tags}</div>
+        <a class="card-link" href="${x(p.repo)}" target="_blank" rel="noopener">查看仓库 →</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function counts() {
+  document.getElementById('c-all').textContent = plugins.length;
+  document.getElementById('c-ob').textContent  = plugins.filter(p=>p.tags?.includes('OneBot')).length;
+  document.getElementById('c-qq').textContent  = plugins.filter(p=>p.tags?.includes('QQ')).length;
+}
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function x(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Modal
+function openModal()  { document.getElementById('overlay').classList.add('show'); document.body.style.overflow='hidden'; }
+function closeModal() { document.getElementById('overlay').classList.remove('show'); document.body.style.overflow=''; }
+function bgClose(e)   { if (e.target===document.getElementById('overlay')) closeModal(); }
+
+function pickTag(t) {
+  pickedTag = pickedTag === t ? '' : t;
+  document.getElementById('tp-ob').className = 'tag-pick' + (pickedTag==='OneBot'?' sel-ob':'');
+  document.getElementById('tp-qq').className = 'tag-pick' + (pickedTag==='QQ'?' sel-qq':'');
+}
+
+function doSubmit() {
+  const name   = document.getElementById('f-name').value.trim();
+  const author = document.getElementById('f-author').value.trim();
+  const desc   = document.getElementById('f-desc').value.trim();
+  const repo   = document.getElementById('f-repo').value.trim();
+  if (!name||!author||!desc||!repo||!pickedTag) { alert('请填写所有必填项并选择标签'); return; }
+  if (!/^https?:\/\/.+/.test(repo)) { alert('请填写有效的仓库地址'); return; }
+  const title = encodeURIComponent(`[插件申请] ${name}`);
+  const body  = encodeURIComponent(
+`**插件昵称：** ${name}
+**作者：** ${author}
+**描述：** ${desc}
+**仓库地址：** ${repo}
+**标签：** ${pickedTag}
+
+---
+> 请确认信息无误后发布，审核通过后自动上架。`);
+  window.open(`https://github.com/${REPO}/issues/new?title=${title}&body=${body}&labels=plugin-submit`, '_blank');
+  closeModal();
+}
+
+load();
+</script>
+</body>
+</html>

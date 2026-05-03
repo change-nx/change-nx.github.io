@@ -3,10 +3,15 @@
 
 ## NapCat配置
 搭建好NapCat并进行登录进入WebUI后
-![①][/data/1.jpg]
-![②][/data/2.jpg]
-![③][/data/3.jpg]
-![④][/data/4.jpg]
+
+①
+![①](Doc/配置/data/1.jpg)
+②
+![②](Doc/配置/data/2.jpg)
+③
+![③](Doc/配置/data/3.jpg)
+④
+![④](Doc/配置/data/4.jpg)
 
 > 此时已配置完毕
 

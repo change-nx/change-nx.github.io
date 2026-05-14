@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cucko - 多平台机器人框架</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
     <style>
         * {
             margin: 0;
@@ -13,196 +12,141 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --accent: #58a6ff;
-            --accent-hover: #79b8ff;
-            --border: #30363d;
-        }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            background: #0d1117;
+            color: #e6edf3;
             line-height: 1.6;
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 64px;
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            z-index: 100;
-        }
-
-        .navbar-inner {
+        .container {
             max-width: 1200px;
-            width: 100%;
             margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 0 24px;
         }
 
-        .logo {
+        header {
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .logo-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #e6edf3;
+            margin-bottom: 16px;
+        }
+
+        .logo-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        header h1 {
             font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-decoration: none;
+            font-weight: 400;
+            color: #8b949e;
+            margin-bottom: 24px;
         }
 
-        .nav-links {
+        .header-buttons {
             display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 500;
             text-decoration: none;
             transition: all 0.2s;
             border: none;
-            cursor: pointer;
         }
 
         .btn-primary {
-            background: var(--accent);
+            background: #238636;
             color: #fff;
         }
 
         .btn-primary:hover {
-            background: var(--accent-hover);
+            background: #2ea043;
         }
 
         .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
+            background: #21262d;
+            color: #e6edf3;
+            border: 1px solid #30363d;
         }
 
         .btn-secondary:hover {
-            background: var(--border);
+            background: #30363d;
         }
 
-        .hero {
-            padding: 180px 24px 100px;
+        .hero-image {
             text-align: center;
-            background: radial-gradient(ellipse at top, #1a2332 0%, var(--bg-primary) 70%);
+            padding: 40px 24px;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid #30363d;
         }
 
         .features {
             padding: 80px 24px;
-            background: var(--bg-secondary);
-        }
-
-        .features-inner {
-            max-width: 1000px;
-            margin: 0 auto;
+            background: #161b22;
         }
 
         .features h2 {
+            text-align: center;
             font-size: 1.75rem;
             margin-bottom: 48px;
-            text-align: center;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .feature-card {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            transition: all 0.2s;
+            text-align: center;
+            padding: 24px;
         }
 
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(88, 166, 255, 0.15);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .feature-emoji {
+            font-size: 2.5rem;
             margin-bottom: 16px;
         }
 
-        .feature-icon .material-symbols-outlined {
-            color: var(--accent);
-            font-size: 22px;
-        }
-
         .feature-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            color: #e6edf3;
         }
 
         .feature-card p {
-            color: var(--text-secondary);
+            color: #8b949e;
             font-size: 0.95rem;
         }
 
         .contact {
             padding: 80px 24px;
-            background: var(--bg-primary);
         }
 
         .contact-inner {
@@ -213,12 +157,7 @@
 
         .contact h2 {
             font-size: 1.75rem;
-            margin-bottom: 16px;
-        }
-
-        .contact > .contact-inner > p {
-            color: var(--text-secondary);
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .contact-grid {
@@ -230,8 +169,8 @@
         }
 
         .contact-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: #161b22;
+            border: 1px solid #30363d;
             border-radius: 12px;
             padding: 24px;
             text-decoration: none;
@@ -240,62 +179,50 @@
         }
 
         .contact-card:hover {
-            border-color: var(--accent);
+            border-color: #58a6ff;
             transform: translateY(-2px);
         }
 
-        .contact-card .material-symbols-outlined {
-            font-size: 28px;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-
         .contact-card h4 {
+            color: #e6edf3;
             margin-bottom: 4px;
             font-size: 1rem;
         }
 
         .contact-card p {
-            color: var(--text-secondary);
+            color: #8b949e;
             font-size: 0.9rem;
         }
 
-        .footer {
+        footer {
             padding: 40px 24px;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid #30363d;
             text-align: center;
-            color: var(--text-secondary);
+            color: #8b949e;
             font-size: 0.9rem;
         }
 
-        .footer a {
-            color: var(--accent);
+        footer a {
+            color: #58a6ff;
             text-decoration: none;
         }
 
-        .footer a:hover {
+        footer a:hover {
             text-decoration: underline;
         }
 
         @media (max-width: 768px) {
-            .hero {
-                padding: 140px 20px 60px;
+            .logo-title {
+                font-size: 2rem;
             }
 
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
+            header h1 {
+                font-size: 1.2rem;
             }
 
             .features-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
+                gap: 24px;
             }
 
             .contact-grid {
@@ -305,39 +232,40 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-inner">
-            <a href="index.html" class="logo">Cucko</a>
-            <div class="nav-links">
-                <a href="docs.html" class="nav-link">文档</a>
-                <a href="https://github.com/change-nx/Cucko" class="nav-link" target="_blank">GitHub</a>
-                <a href="docs.html" class="btn btn-primary">开始使用</a>
+    <header>
+        <div class="container">
+            <img src="logo.svg" alt="Cucko" class="logo-img" onerror="this.style.display='none'">
+            <h1 class="logo-title"><a href="index.html">Cucko</a></h1>
+            <h1>支持多平台的机器人框架</h1>
+            <div class="header-buttons">
+                <a href="docs.html" class="btn btn-primary">查看文档</a>
+                <a href="https://github.com/change-nx/Cucko" class="btn btn-secondary" target="_blank">GitHub</a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <section class="hero">
-        <h1>支持多平台的机器人框架</h1>
-        <p>开箱即用，轻松构建你的 QQ 机器人。支持 QQ 官机与 OneBot v11 协议。</p>
-        <div class="hero-buttons">
-            <a href="docs.html" class="btn btn-primary">查看文档</a>
-            <a href="https://github.com/change-nx/Cucko" class="btn btn-secondary" target="_blank">GitHub</a>
+    <section class="hero-image">
+        <div class="container">
+            <img src="https://aka.doubaocdn.com/s/i98Q1wQ57d" alt="展示" onerror="this.parentElement.style.display='none'">
         </div>
     </section>
 
     <section class="features">
-        <div class="features-inner">
+        <div class="container">
             <h2>核心特性</h2>
             <div class="features-grid">
                 <div class="feature-card">
+                    <div class="feature-emoji">📱</div>
                     <h3>多平台支持</h3>
                     <p>支持 QQ 官机和 OneBot v11，灵活对接各种聊天平台</p>
                 </div>
                 <div class="feature-card">
+                    <div class="feature-emoji">🧩</div>
                     <h3>插件开发</h3>
                     <p>简单易用的插件系统，快速开发功能强大的机器人</p>
                 </div>
                 <div class="feature-card">
+                    <div class="feature-emoji">⚡</div>
                     <h3>高效稳定</h3>
                     <p>轻量高效的设计，稳定运行于各种环境</p>
                 </div>
@@ -346,24 +274,27 @@
     </section>
 
     <section class="contact">
-        <div class="contact-inner">
-            <h2>联系我们</h2>
-            <p>有任何问题或建议？欢迎加入我们！</p>
-            <div class="contact-grid">
-                <a href="mailto:couest@qq.com" class="contact-card">
-                    <h4>邮箱</h4>
-                    <p>couest@qq.com</p>
-                </a>
-                <a href="https://qm.qq.com/q/vnhh3Xesb6" class="contact-card" target="_blank">
-                    <h4>QQ 群</h4>
-                    <p>点击加入群聊</p>
-                </a>
+        <div class="container">
+            <div class="contact-inner">
+                <h2>联系我们</h2>
+                <div class="contact-grid">
+                    <a href="mailto:couest@qq.com" class="contact-card">
+                        <h4>邮箱</h4>
+                        <p>couest@qq.com</p>
+                    </a>
+                    <a href="https://qm.qq.com/q/vnhh3Xesb6" class="contact-card" target="_blank">
+                        <h4>QQ 群</h4>
+                        <p>点击加入群聊</p>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="footer">
-        <p>© 2024 <a href="https://github.com/change-nx/Cucko" target="_blank">Cucko</a> · MIT License</p>
+    <footer>
+        <div class="container">
+            <p>© 2024 <a href="https://github.com/change-nx/Cucko" target="_blank">Cucko</a> · MIT License</p>
+        </div>
     </footer>
 </body>
 </html>

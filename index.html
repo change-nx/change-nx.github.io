@@ -2,14 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Cucko</title>
-    <!-- marked.js 解析 Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- highlight.js 代码高亮 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- Material Symbols 图标库 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cucko - 多平台机器人框架</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
     <style>
         * {
@@ -18,659 +13,423 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, -apple-system, sans-serif;
-            background: #f5f5f5;
-            height: 100vh;
-            overflow: hidden;
+        :root {
+            --c-brand: #3eaf7c;
+            --c-brand-light: #4abf8a;
+            --c-text: #2c3e50;
+            --c-text-light: #4e6e8e;
+            --c-bg: #ffffff;
+            --c-bg-light: #f8fafc;
+            --c-divider: #eaecef;
         }
 
-        /* ==================== 顶部栏 ==================== */
-        .app-bar {
-            background: #ffffff;
-            height: 64px;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #e0e0e0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--c-text);
+            line-height: 1.6;
+            background: var(--c-bg);
+        }
+
+        /* ==================== Navbar ==================== */
+        .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
+            height: 64px;
+            background: var(--c-bg);
+            border-bottom: 1px solid var(--c-divider);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
             z-index: 100;
         }
 
-        .app-bar-left {
+        .navbar-inner {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .app-icon {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .app-icon svg {
-            width: 32px;
-            height: 32px;
-        }
-
-        .app-title {
-            font-size: 22px;
-            font-weight: 500;
-            color: #1a1c1e;
-            letter-spacing: -0.2px;
-        }
-
-        .menu-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-
-        .menu-btn:hover {
-            background: #e8e8e8;
-        }
-
-        .menu-btn .material-symbols-outlined {
-            font-size: 28px;
-            color: #1a1c1e;
-        }
-
-        /* ==================== 主内容区 ==================== */
-        .main-content {
-            margin-top: 64px;
-            height: calc(100vh - 64px);
-            overflow-y: auto;
-            background: #ffffff;
-            transition: margin-left 0.3s ease;
-        }
-
-        .content-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 48px;
-        }
-
-        /* Markdown 渲染样式 */
-        .markdown-body {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #1a1c1e;
-        }
-
-        .markdown-body h1 {
-            font-size: 2em;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 0.3em;
-            margin: 24px 0 16px;
-        }
-
-        .markdown-body h2 {
-            font-size: 1.5em;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 0.3em;
-            margin: 24px 0 16px;
-        }
-
-        .markdown-body h3 {
-            font-size: 1.25em;
-            margin: 20px 0 12px;
-        }
-
-        .markdown-body p {
-            margin: 12px 0;
-        }
-
-        .markdown-body code {
-            background: #f0f0f0;
-            padding: 0.2em 0.4em;
-            border-radius: 6px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 85%;
-        }
-
-        .markdown-body pre {
-            background: #1e1e1e;
-            padding: 16px;
-            border-radius: 12px;
-            overflow-x: auto;
-            margin: 16px 0;
-        }
-
-        .markdown-body pre code {
-            background: none;
-            color: #d4d4d4;
-            padding: 0;
-        }
-
-        .markdown-body table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 16px 0;
-        }
-
-        .markdown-body th,
-        .markdown-body td {
-            border: 1px solid #e0e0e0;
-            padding: 10px 12px;
-        }
-
-        .markdown-body th {
-            background: #f8f8f8;
-        }
-
-        .markdown-body blockquote {
-            border-left: 4px solid #6750a4;
-            color: #555;
-            padding-left: 16px;
-            margin: 16px 0;
-        }
-
-        .markdown-body a {
-            color: #6750a4;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--c-text);
             text-decoration: none;
         }
 
-        .markdown-body a:hover {
-            text-decoration: underline;
+        .logo svg {
+            width: 36px;
+            height: 36px;
         }
 
-        .markdown-body img {
-            max-width: 100%;
-            border-radius: 8px;
-        }
-
-        /* ==================== 侧滑抽屉 ==================== */
-        .drawer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 200;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s;
-        }
-
-        .drawer-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .drawer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 320px;
-            max-width: 85%;
-            background: #ffffff;
-            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-            z-index: 201;
-            transform: translateX(-100%);
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .drawer.open {
-            transform: translateX(0);
-        }
-
-        .drawer-header {
-            padding: 20px 20px 12px;
-            border-bottom: 1px solid #e8e8e8;
+        .nav-links {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            margin-left: auto;
+            gap: 24px;
         }
 
-        .drawer-header h3 {
-            font-size: 20px;
+        .nav-link {
+            color: var(--c-text-light);
+            text-decoration: none;
             font-weight: 500;
-            color: #1a1c1e;
+            transition: color 0.2s;
+            font-size: 0.95rem;
         }
 
-        .close-drawer {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 28px;
-            display: flex;
+        .nav-link:hover {
+            color: var(--c-brand);
+        }
+
+        .btn {
+            display: inline-flex;
             align-items: center;
-        }
-
-        .close-drawer:hover {
-            background: #e8e8e8;
-        }
-
-        .drawer-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px 0;
-        }
-
-        /* ==================== 文件树样式 ==================== */
-        .tree-node {
-            list-style: none;
-            user-select: none;
-        }
-
-        .tree-node-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 16px 10px 20px;
-            cursor: pointer;
-            gap: 12px;
-            transition: background 0.15s;
-            border-radius: 0 28px 28px 0;
-            margin-right: 8px;
-        }
-
-        .tree-node-item:hover {
-            background: #f0f0f0;
-        }
-
-        .tree-node-item.active {
-            background: #eaddff;
-        }
-
-        .tree-node-item.active .node-title {
-            color: #6750a4;
-            font-weight: 500;
-        }
-
-        .expand-icon {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            gap: 8px;
+            padding: 10px 24px;
             border-radius: 20px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
         }
 
-        .expand-icon .material-symbols-outlined {
-            font-size: 20px;
-            color: #666;
-            transition: transform 0.2s;
+        .btn-primary {
+            background: var(--c-brand);
+            color: white;
         }
 
-        .expand-icon.collapsed .material-symbols-outlined {
-            transform: rotate(0deg);
+        .btn-primary:hover {
+            background: var(--c-brand-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(62, 175, 124, 0.3);
         }
 
-        .expand-icon:not(.collapsed) .material-symbols-outlined {
-            transform: rotate(90deg);
+        .btn-outline {
+            background: transparent;
+            color: var(--c-brand);
+            border: 1px solid var(--c-brand);
         }
 
-        .node-icon {
-            width: 24px;
+        .btn-outline:hover {
+            background: var(--c-brand);
+            color: white;
+        }
+
+        /* ==================== Hero Section ==================== */
+        .hero {
+            padding: 160px 24px 100px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--c-bg-light) 0%, var(--c-bg) 100%);
+        }
+
+        .hero-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--c-brand) 0%, var(--c-brand-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--c-text-light);
+            margin-bottom: 40px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ==================== Features Section ==================== */
+        .features {
+            padding: 80px 24px;
+            background: var(--c-bg);
+        }
+
+        .features-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 48px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            border-radius: 16px;
+            background: var(--c-bg-light);
+            border: 1px solid var(--c-divider);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--c-brand) 0%, var(--c-brand-light) 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-bottom: 20px;
         }
 
-        .node-icon .material-symbols-outlined {
-            font-size: 20px;
-            color: #5e5e5e;
+        .feature-icon .material-symbols-outlined {
+            color: white;
+            font-size: 28px;
         }
 
-        .node-title {
-            flex: 1;
-            font-size: 14px;
-            color: #1a1c1e;
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
         }
 
-        .children {
-            padding-left: 28px;
-            display: none;
+        .feature-card p {
+            color: var(--c-text-light);
         }
 
-        .children.expanded {
-            display: block;
+        /* ==================== Contact Section ==================== */
+        .contact {
+            padding: 80px 24px;
+            background: var(--c-bg-light);
         }
 
-        /* 加载状态 */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            color: #999;
+        .contact-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
         }
 
-        /* 滚动条 */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        .contact h2 {
+            font-size: 2rem;
+            margin-bottom: 32px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #f0f0f0;
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #c0c0c0;
-            border-radius: 4px;
+        .contact-card {
+            padding: 24px;
+            background: var(--c-bg);
+            border-radius: 12px;
+            border: 1px solid var(--c-divider);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
         }
 
+        .contact-card:hover {
+            border-color: var(--c-brand);
+            transform: translateY(-2px);
+        }
+
+        .contact-card .material-symbols-outlined {
+            font-size: 36px;
+            color: var(--c-brand);
+            margin-bottom: 12px;
+        }
+
+        .contact-card h4 {
+            margin-bottom: 8px;
+        }
+
+        .contact-card p {
+            color: var(--c-text-light);
+            font-size: 0.95rem;
+        }
+
+        /* ==================== Footer ==================== */
+        .footer {
+            padding: 40px 24px;
+            background: var(--c-text);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ==================== Mobile ==================== */
         @media (max-width: 768px) {
-            .content-container {
-                padding: 24px 20px;
+            .navbar {
+                padding: 0 16px;
             }
 
-            .app-title {
-                font-size: 18px;
+            .hero {
+                padding: 120px 16px 60px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 顶部栏 -->
-    <div class="app-bar">
-        <div class="app-bar-left">
-            <div class="app-icon" id="appIcon">
-                <!-- SVG 图标会在这里动态加载 -->
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="logo" id="logoLink">
+                <div id="navbarLogo"></div>
+                <span>Cucko</span>
+            </a>
+            <div class="nav-links">
+                <a href="docs.html" class="nav-link">文档</a>
+                <a href="https://github.com/change-nx/Cucko" class="nav-link" target="_blank">GitHub</a>
+                <a href="docs.html" class="btn btn-primary">开始使用</a>
             </div>
-            <span class="app-title">Cucko Doc</span>
         </div>
-        <button class="menu-btn" id="menuBtn">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-    </div>
+    </nav>
 
-    <!-- 主内容区 -->
-    <div class="main-content" id="mainContent">
-        <div class="content-container">
-            <div class="markdown-body" id="markdownContent">
-                <div class="loading">加载中...</div>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-logo" id="heroLogo"></div>
+            <h1>Cucko</h1>
+            <p>支持多平台的机器人框架</p>
+            <div class="hero-actions">
+                <a href="docs.html" class="btn btn-primary">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    查看文档
+                </a>
+                <a href="https://github.com/change-nx/Cucko" class="btn btn-outline" target="_blank">
+                    <span class="material-symbols-outlined">code</span>
+                    GitHub
+                </a>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- 侧滑抽屉（目录） -->
-    <div class="drawer-overlay" id="drawerOverlay">
-        <div class="drawer" id="drawer">
-            <div class="drawer-header">
-                <h3>目录</h3>
-                <button class="close-drawer" id="closeDrawerBtn">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-            </div>
-            <div class="drawer-content">
-                <ul class="tree-node" id="fileTree"></ul>
+    <!-- Features -->
+    <section class="features">
+        <div class="features-inner">
+            <h2>核心特性</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">devices</span>
+                    </div>
+                    <h3>多平台支持</h3>
+                    <p>支持 QQ 官机和 OneBot v11，灵活对接各种聊天平台</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">extension</span>
+                    </div>
+                    <h3>插件开发</h3>
+                    <p>简单易用的插件系统，快速开发功能强大的机器人功能</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span class="material-symbols-outlined">speed</span>
+                    </div>
+                    <h3>高效稳定</h3>
+                    <p>轻量高效，稳定运行于各种环境</p>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact">
+        <div class="contact-inner">
+            <h2>联系我们</h2>
+            <p>有任何问题或建议？欢迎加入我们！</p>
+            <div class="contact-grid">
+                <a href="mailto:couest@qq.com" class="contact-card">
+                    <span class="material-symbols-outlined">mail</span>
+                    <h4>邮箱</h4>
+                    <p>couest@qq.com</p>
+                </a>
+                <a href="https://qm.qq.com/q/vnhh3Xesb6" class="contact-card" target="_blank">
+                    <span class="material-symbols-outlined">group</span>
+                    <h4>QQ 群</h4>
+                    <p>点击加入</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Cucko. Released under the MIT License.</p>
+    </footer>
 
     <script>
-        // 存储文档树数据
-        let docsTree = [];
-        // 扁平化映射 path -> { name, content, path }
-        let contentMap = new Map();
-        // 所有文件节点列表
-        let fileNodesList = [];
-        // 当前选中的文档路径
-        let currentPath = "";
-        // 是否已加载完成
-        let isLoaded = false;
-
-        // ==================== 构建扁平化映射 ====================
-        function buildContentMap(nodes, parentPath = "") {
-            for (const node of nodes) {
-                if (node.list) {
-                    // 文件夹
-                    buildContentMap(node.list, parentPath);
-                } else if (node.content !== undefined) {
-                    // 文件（必须有 content）
-                    const fullPath = node.path || node.name;
-                    contentMap.set(fullPath, {
-                        name: node.name,
-                        content: node.content,
-                        path: fullPath
-                    });
-                    fileNodesList.push({
-                        name: node.name,
-                        path: fullPath,
-                        type: "file"
-                    });
-                }
-            }
-        }
-
-        // ==================== 渲染文件树 ====================
-        function renderTree(nodes, level = 0) {
-            let html = '';
-            for (const node of nodes) {
-                if (node.list) {
-                    // 文件夹
-                    const folderId = `folder_${node.name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_')}_${Math.random().toString(36).substr(2, 6)}`;
-                    html += `
-                        <li class="tree-node" data-type="folder" data-name="${escapeHtml(node.name)}">
-                            <div class="tree-node-item">
-                                <div class="expand-icon collapsed" data-folder-id="${folderId}">
-                                    <span class="material-symbols-outlined">chevron_right</span>
-                                </div>
-                                <div class="node-icon">
-                                    <span class="material-symbols-outlined">folder</span>
-                                </div>
-                                <span class="node-title">${escapeHtml(node.name)}</span>
-                            </div>
-                            <ul class="children" id="${folderId}">
-                                ${renderTree(node.list, level + 1)}
-                            </ul>
-                        </li>
-                    `;
-                } else {
-                    // 文件
-                    const filePath = node.path || node.name;
-                    const isActive = currentPath === filePath;
-                    html += `
-                        <li class="tree-node" data-type="file" data-path="${escapeHtml(filePath)}">
-                            <div class="tree-node-item ${isActive ? 'active' : ''}">
-                                <div class="node-icon">
-                                    <span class="material-symbols-outlined">description</span>
-                                </div>
-                                <span class="node-title">${escapeHtml(node.name)}</span>
-                            </div>
-                        </li>
-                    `;
-                }
-            }
-            return html;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // 刷新树并绑定事件
-        function refreshTree() {
-            const treeContainer = document.getElementById('fileTree');
-            if (!docsTree.length) {
-                treeContainer.innerHTML = '<div style="padding: 20px; color: #999;">暂无文档</div>';
-                return;
-            }
-            treeContainer.innerHTML = renderTree(docsTree);
-
-            // 绑定文件点击
-            document.querySelectorAll('[data-type="file"]').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const path = el.dataset.path;
-                    if (path && contentMap.has(path)) {
-                        currentPath = path;
-                        refreshTree();      // 刷新高亮
-                        renderContentByPath(path);
-                        closeDrawer();       // 移动端自动关闭抽屉
-                    }
-                });
-            });
-
-            // 绑定文件夹展开/收起
-            document.querySelectorAll('.expand-icon').forEach(icon => {
-                icon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const folderId = icon.dataset.folderId;
-                    const childrenUl = document.getElementById(folderId);
-                    if (childrenUl) {
-                        const isCollapsed = icon.classList.contains('collapsed');
-                        if (isCollapsed) {
-                            icon.classList.remove('collapsed');
-                            childrenUl.classList.add('expanded');
-                        } else {
-                            icon.classList.add('collapsed');
-                            childrenUl.classList.remove('expanded');
-                        }
-                    }
-                });
-            });
-
-            // 默认展开所有文件夹
-            document.querySelectorAll('.children').forEach(ul => {
-                ul.classList.add('expanded');
-            });
-            document.querySelectorAll('.expand-icon').forEach(icon => {
-                icon.classList.remove('collapsed');
-            });
-        }
-
-        // 根据路径渲染 Markdown 内容
-        function renderContentByPath(path) {
-            const doc = contentMap.get(path);
-            if (doc && doc.content) {
-                const html = marked.parse(doc.content);
-                document.getElementById('markdownContent').innerHTML = html;
-                // 代码高亮
-                document.querySelectorAll('#markdownContent pre code').forEach(block => {
-                    hljs.highlightElement(block);
-                });
-                // 更新页面标题
-                document.title = `${doc.name} - Doc`;
-            } else {
-                document.getElementById('markdownContent').innerHTML = '<p style="color: #999;">文档内容不存在</p>';
-            }
-        }
-
-        // ==================== 加载 docs.json ====================
-        async function loadDocs() {
-            try {
-                const response = await fetch('docs.json?v=' + Date.now());
-                if (!response.ok) {
-                    throw new Error('docs.json 加载失败');
-                }
-                docsTree = await response.json();
-                
-                // 构建映射
-                contentMap.clear();
-                fileNodesList = [];
-                buildContentMap(docsTree);
-                
-                // 设置默认文档：优先找 path 或 name 为 "首页" 的文档
-                let defaultDoc = null;
-                for (const item of fileNodesList) {
-                    if (item.path === "首页" || item.name === "首页") {
-                        defaultDoc = item;
-                        break;
-                    }
-                }
-                // 如果没有找到"首页"，用第一个文档
-                if (!defaultDoc && fileNodesList.length > 0) {
-                    defaultDoc = fileNodesList[0];
-                }
-                
-                if (defaultDoc) {
-                    currentPath = defaultDoc.path;
-                }
-                
-                // 渲染界面
-                refreshTree();
-                if (currentPath) {
-                    renderContentByPath(currentPath);
-                } else {
-                    document.getElementById('markdownContent').innerHTML = '<p style="color: #999;">请先在 docs.json 中添加文档</p>';
-                }
-                
-                isLoaded = true;
-            } catch (error) {
-                console.error('加载失败:', error);
-                document.getElementById('markdownContent').innerHTML = `
-                    <div style="color: #c62828; padding: 20px; text-align: center;">
-                        <h3>加载失败</h3>
-                        <p>无法加载 docs.json 文件</p>
-                        <p style="font-size: 14px;">请确保 docs.json 文件存在且格式正确</p>
-                    </div>
-                `;
-            }
-        }
-
-        // ==================== 加载 SVG 图标 ====================
         async function loadLogo() {
             try {
                 const response = await fetch('logo.svg');
                 if (response.ok) {
                     const svgText = await response.text();
-                    document.getElementById('appIcon').innerHTML = svgText;
+                    document.getElementById('navbarLogo').innerHTML = svgText;
+                    document.getElementById('heroLogo').innerHTML = svgText;
                 } else {
-                    // 如果没有 logo.svg，显示默认图标
-                    document.getElementById('appIcon').innerHTML = '<span style="font-size: 28px;">📄</span>';
+                    document.getElementById('navbarLogo').innerHTML = '<span style="font-size: 32px;">🐦</span>';
+                    document.getElementById('heroLogo').innerHTML = '<span style="font-size: 100px;">🐦</span>';
                 }
             } catch (e) {
-                document.getElementById('appIcon').innerHTML = '<span style="font-size: 28px;">📄</span>';
+                document.getElementById('navbarLogo').innerHTML = '<span style="font-size: 32px;">🐦</span>';
+                document.getElementById('heroLogo').innerHTML = '<span style="font-size: 100px;">🐦</span>';
             }
         }
 
-        // ==================== 抽屉控制 ====================
-        const drawer = document.getElementById('drawer');
-        const overlay = document.getElementById('drawerOverlay');
-        const menuBtn = document.getElementById('menuBtn');
-        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
-
-        function openDrawer() {
-            drawer.classList.add('open');
-            overlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDrawer() {
-            drawer.classList.remove('open');
-            overlay.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-
-        menuBtn.addEventListener('click', openDrawer);
-        closeDrawerBtn.addEventListener('click', closeDrawer);
-        overlay.addEventListener('click', closeDrawer);
-
-        // 点击主内容区关闭抽屉（移动端友好）
-        document.getElementById('mainContent').addEventListener('click', () => {
-            if (drawer.classList.contains('open')) {
-                closeDrawer();
-            }
-        });
-
-        // ==================== 初始化 ====================
         loadLogo();
-        loadDocs();
     </script>
 </body>
 </html>
